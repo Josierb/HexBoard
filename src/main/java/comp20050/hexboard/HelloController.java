@@ -8,11 +8,30 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
 import static javafx.scene.paint.Color.BLACK;
 
 public class HelloController {
+
+    // Tracking which players
+    private boolean isRedTurn = true;
+
+    @FXML
+    void getHexID(MouseEvent event) {
+        Polygon hexagon = (Polygon) event.getSource();
+        if(hexagon.getFill().equals(Color.WHITE)){
+            if(isRedTurn){
+                hexagon.setFill(Color.RED);
+            }
+            else{
+                hexagon.setFill(Color.BLUE);
+            }
+            isRedTurn = !isRedTurn;
+        }
+    }
+
 
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
@@ -401,11 +420,6 @@ public class HelloController {
     @FXML // fx:id="hex99"
     private Polygon hex99; // Value injected by FXMLLoader
 
-    @FXML
-    void getHexID(MouseEvent event) {
-        Polygon hexagon = (Polygon) event.getSource();
-        hexagon.setFill(BLACK);
-    }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
