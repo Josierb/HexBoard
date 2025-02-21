@@ -6,7 +6,10 @@ package comp20050.hexboard;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
@@ -35,6 +38,16 @@ public class Controller {
             isRedTurn = !isRedTurn;
         }
     }
+
+    @FXML
+    private Button quitbutton;
+
+    @FXML
+    void quit(MouseEvent event) {
+        Platform.exit();
+        System.exit(0);
+    }
+
 
 
     @FXML // ResourceBundle that was given to the FXMLLoader
