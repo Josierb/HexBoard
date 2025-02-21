@@ -14,6 +14,7 @@ public class HexOustApplication extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
         primaryStage.setTitle("Hexagon Grid");
         primaryStage.setScene(new Scene(root, 800, 600));
+        primaryStage.setFullScreen(true);
         primaryStage.show();
     }
 
