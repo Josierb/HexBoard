@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
+import javafx.scene.control.Label;
 
 public class Controller {
 
@@ -17,14 +18,19 @@ public class Controller {
     private boolean isRedTurn = true;
 
     @FXML
+    private Label turnlabel;
+
+    @FXML
     void getHexID(MouseEvent event) {
         Polygon hexagon = (Polygon) event.getSource();
         if(hexagon.getFill().equals(Color.WHITE)){
             if(isRedTurn){
                 hexagon.setFill(Color.RED);
+                turnlabel.setText("Blues Turn");
             }
             else{
                 hexagon.setFill(Color.BLUE);
+                turnlabel.setText("Reds Turn");
             }
             isRedTurn = !isRedTurn;
         }
