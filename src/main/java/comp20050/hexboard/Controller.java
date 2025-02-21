@@ -26,7 +26,7 @@ public class Controller {
     @FXML
     void getHexID(MouseEvent event) {
         Polygon hexagon = (Polygon) event.getSource();
-        if(hexagon.getFill().equals(Color.WHITE)){
+        if(hexagon.getFill().equals(Color.LIGHTGREY)){
             if(isRedTurn){
                 hexagon.setFill(Color.RED);
                 turnlabel.setText("Blues Turn");

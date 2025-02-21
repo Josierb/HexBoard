@@ -1,0 +1,21 @@
+#quitbutton{
+    -fx-background-color: linear-gradient(to bottom, #ff0000, #990000);
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-border-color: black;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 10;
+}
+
+#quitbutton:hover {
+    -fx-background-color: linear-gradient(to bottom, #cc0000, #660000);
+    -fx-cursor: hand;
+}
+
+Polygon:hover {
+    -fx-foreground-color: linear-gradient(to bottom, #cc0000, #660000);
+    -fx-cursor: hand;
+    -fx-fill: lightgrey;
+}
