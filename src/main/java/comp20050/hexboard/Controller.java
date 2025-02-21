@@ -14,6 +14,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.control.Label;
+import javafx.scene.paint.Paint;
+
 
 public class Controller {
 
@@ -26,7 +28,7 @@ public class Controller {
     @FXML
     void getHexID(MouseEvent event) {
         Polygon hexagon = (Polygon) event.getSource();
-        if(hexagon.getFill().equals(Color.LIGHTGREY)){
+        if(hexagon.getFill().equals(Color.LIGHTGRAY)){
             if(isRedTurn){
                 hexagon.setFill(Color.RED);
                 turnlabel.setText("Blues Turn");
@@ -47,6 +49,26 @@ public class Controller {
         Platform.exit();
         System.exit(0);
     }
+
+    @FXML
+    void onHexHover(MouseEvent event) {
+        Polygon hexagon = (Polygon) event.getSource();
+
+        if (hexagon.getFill().equals(Color.WHITE)) {
+            hexagon.setFill(Color.LIGHTGRAY);
+        }
+    }
+
+    @FXML
+    void exitHexHover(MouseEvent event) {
+        Polygon hexagon = (Polygon) event.getSource();
+        if (hexagon.getFill().equals(Color.LIGHTGRAY)) {
+            hexagon.setFill(Color.WHITE);
+        }
+    }
+
+
+
 
 
 

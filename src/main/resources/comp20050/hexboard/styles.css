@@ -1,7 +1,6 @@
 Polygon:hover{
     -fx-foreground-color: linear-gradient(to bottom, #cc0000, #660000);
     -fx-cursor: hand;
-    -fx-fill: lightgrey;
 }
 
 Label{
