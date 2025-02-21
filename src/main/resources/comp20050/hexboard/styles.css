@@ -1,3 +1,13 @@
+Polygon:hover{
+    -fx-foreground-color: linear-gradient(to bottom, #cc0000, #660000);
+    -fx-cursor: hand;
+    -fx-fill: lightgrey;
+}
+
+Label{
+
+}
+
 #quitbutton{
     -fx-background-color: linear-gradient(to bottom, #ff0000, #990000);
     -fx-text-fill: white;
@@ -9,13 +19,9 @@
     -fx-padding: 10;
 }
 
-#quitbutton:hover {
+#quitbutton:hover{
     -fx-background-color: linear-gradient(to bottom, #cc0000, #660000);
     -fx-cursor: hand;
-}
-
-Polygon:hover {
-    -fx-foreground-color: linear-gradient(to bottom, #cc0000, #660000);
-    -fx-cursor: hand;
-    -fx-fill: lightgrey;
+    -fx-scale-x: 1.2;
+    -fx-scale-y: 1.2;
 }
