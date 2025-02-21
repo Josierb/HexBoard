@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>comp20050</groupId>
-    <artifactId>HexBoard</artifactId>
+    <artifactId>HexOust</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>HexBoard</name>
 
@@ -80,7 +80,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>comp20050.hexboard/comp20050.hexboard.HelloApplication</mainClass>
+                            <mainClass>comp20050.hexboard/comp20050.hexboard.HexOustApplication</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>

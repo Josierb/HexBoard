@@ -11,9 +11,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
-import static javafx.scene.paint.Color.BLACK;
-
-public class HelloController {
+public class Controller {
 
     // Tracking which players
     private boolean isRedTurn = true;

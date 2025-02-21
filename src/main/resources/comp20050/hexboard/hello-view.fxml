@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Polygon?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="668.0" prefWidth="914.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="comp20050.hexboard.HelloController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="668.0" prefWidth="914.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="comp20050.hexboard.Controller">
     <children>
         <Polygon fx:id="hex20" fill="WHITE" layoutX="357.0" layoutY="183.0" onMouseClicked="#getHexID" rotate="90.0" scaleX="0.5" scaleY="0.5" stroke="BLACK" strokeType="INSIDE" translateX="100.0">
             <points>
