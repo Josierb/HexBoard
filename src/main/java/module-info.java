@@ -5,6 +5,7 @@ module comp20050.hexboard {
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
     requires org.kordamp.bootstrapfx.core;
+    requires javafx.media;
 
     opens comp20050.hexboard to javafx.fxml;
     exports comp20050.hexboard;
