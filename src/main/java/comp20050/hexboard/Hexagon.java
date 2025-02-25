@@ -37,6 +37,10 @@ public class Hexagon {
         return neighbors.get(direction);
     }
 
+    public Map<String, Hexagon> getNeighbors() {  // ✅ New getter method
+        return neighbors;
+    }
+
     public int getX() { return q; }
     public int getY() { return r; }
     public int getZ() { return s; }

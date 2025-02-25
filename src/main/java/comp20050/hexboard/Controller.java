@@ -5,6 +5,8 @@
 package comp20050.hexboard;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
@@ -20,12 +22,37 @@ import javafx.scene.control.Label;
 
 public class Controller {
 
+    private HexGrid hexGrid = new HexGrid();
+    private Map<Polygon, Hexagon> polygonToHexMap = new HashMap<>();
+
     // Tracking which players
     private boolean isRedTurn = true;
  //   private AudioClip stonePlacement;
 
     @FXML
     private Label turnlabel;
+
+
+
+    public void testNeighbors(int x, int y, int z) {
+        Hexagon hex = hexGrid.getHex(x, y, z);
+
+        if (hex == null) {
+            System.out.println("Hexagon at (" + x + ", " + y + ", " + z + ") not found.");
+            return;
+        }
+
+        System.out.println("Neighbors of Hexagon (" + x + ", " + y + ", " + z + "):");
+
+        for (Map.Entry<String, Hexagon> entry : hex.getNeighbors().entrySet()) {
+            Hexagon neighbor = entry.getValue();
+            System.out.println(" → Neighbor at (" + neighbor.getX() + ", " + neighbor.getY() + ", " + neighbor.getZ() + ")");
+        }
+    }
+
+
+
+
 
     @FXML
     void getHexID(MouseEvent event) {
@@ -609,7 +636,265 @@ public class Controller {
         Hexagon h126 = new Hexagon(-2, -4, 6, hex126);
         Hexagon h127 = new Hexagon(-1, -5, 6, hex127);
 
+        // adding hexagons to the grid itself
 
+        hexGrid.addHex(h1);
+        hexGrid.addHex(h2);
+        hexGrid.addHex(h3);
+        hexGrid.addHex(h4);
+        hexGrid.addHex(h5);
+        hexGrid.addHex(h6);
+        hexGrid.addHex(h7);
+        hexGrid.addHex(h8);
+        hexGrid.addHex(h9);
+        hexGrid.addHex(h10);
+        hexGrid.addHex(h11);
+        hexGrid.addHex(h12);
+        hexGrid.addHex(h13);
+        hexGrid.addHex(h14);
+        hexGrid.addHex(h15);
+        hexGrid.addHex(h16);
+        hexGrid.addHex(h17);
+        hexGrid.addHex(h18);
+        hexGrid.addHex(h19);
+        hexGrid.addHex(h20);
+        hexGrid.addHex(h21);
+        hexGrid.addHex(h22);
+        hexGrid.addHex(h23);
+        hexGrid.addHex(h24);
+        hexGrid.addHex(h25);
+        hexGrid.addHex(h26);
+        hexGrid.addHex(h27);
+        hexGrid.addHex(h28);
+        hexGrid.addHex(h29);
+        hexGrid.addHex(h30);
+        hexGrid.addHex(h31);
+        hexGrid.addHex(h32);
+        hexGrid.addHex(h33);
+        hexGrid.addHex(h34);
+        hexGrid.addHex(h35);
+        hexGrid.addHex(h36);
+        hexGrid.addHex(h37);
+        hexGrid.addHex(h38);
+        hexGrid.addHex(h39);
+        hexGrid.addHex(h40);
+        hexGrid.addHex(h41);
+        hexGrid.addHex(h42);
+        hexGrid.addHex(h43);
+        hexGrid.addHex(h44);
+        hexGrid.addHex(h45);
+        hexGrid.addHex(h46);
+        hexGrid.addHex(h47);
+        hexGrid.addHex(h48);
+        hexGrid.addHex(h49);
+        hexGrid.addHex(h50);
+        hexGrid.addHex(h51);
+        hexGrid.addHex(h52);
+        hexGrid.addHex(h53);
+        hexGrid.addHex(h54);
+        hexGrid.addHex(h55);
+        hexGrid.addHex(h56);
+        hexGrid.addHex(h57);
+        hexGrid.addHex(h58);
+        hexGrid.addHex(h59);
+        hexGrid.addHex(h60);
+        hexGrid.addHex(h61);
+        hexGrid.addHex(h62);
+        hexGrid.addHex(h63);
+        hexGrid.addHex(h64);
+        hexGrid.addHex(h65);
+        hexGrid.addHex(h66);
+        hexGrid.addHex(h67);
+        hexGrid.addHex(h68);
+        hexGrid.addHex(h69);
+        hexGrid.addHex(h70);
+        hexGrid.addHex(h71);
+        hexGrid.addHex(h72);
+        hexGrid.addHex(h73);
+        hexGrid.addHex(h74);
+        hexGrid.addHex(h75);
+        hexGrid.addHex(h76);
+        hexGrid.addHex(h77);
+        hexGrid.addHex(h78);
+        hexGrid.addHex(h79);
+        hexGrid.addHex(h80);
+        hexGrid.addHex(h81);
+        hexGrid.addHex(h82);
+        hexGrid.addHex(h83);
+        hexGrid.addHex(h84);
+        hexGrid.addHex(h85);
+        hexGrid.addHex(h86);
+        hexGrid.addHex(h87);
+        hexGrid.addHex(h88);
+        hexGrid.addHex(h89);
+        hexGrid.addHex(h90);
+        hexGrid.addHex(h91);
+        hexGrid.addHex(h92);
+        hexGrid.addHex(h93);
+        hexGrid.addHex(h94);
+        hexGrid.addHex(h95);
+        hexGrid.addHex(h96);
+        hexGrid.addHex(h97);
+        hexGrid.addHex(h98);
+        hexGrid.addHex(h99);
+        hexGrid.addHex(h100);
+        hexGrid.addHex(h101);
+        hexGrid.addHex(h102);
+        hexGrid.addHex(h103);
+        hexGrid.addHex(h104);
+        hexGrid.addHex(h105);
+        hexGrid.addHex(h106);
+        hexGrid.addHex(h107);
+        hexGrid.addHex(h108);
+        hexGrid.addHex(h109);
+        hexGrid.addHex(h110);
+        hexGrid.addHex(h111);
+        hexGrid.addHex(h112);
+        hexGrid.addHex(h113);
+        hexGrid.addHex(h114);
+        hexGrid.addHex(h115);
+        hexGrid.addHex(h116);
+        hexGrid.addHex(h117);
+        hexGrid.addHex(h118);
+        hexGrid.addHex(h119);
+        hexGrid.addHex(h120);
+        hexGrid.addHex(h121);
+        hexGrid.addHex(h122);
+        hexGrid.addHex(h123);
+        hexGrid.addHex(h124);
+        hexGrid.addHex(h125);
+        hexGrid.addHex(h126);
+        hexGrid.addHex(h127);
+
+        polygonToHexMap.put(hex1, h1);
+        polygonToHexMap.put(hex2, h2);
+        polygonToHexMap.put(hex3, h3);
+        polygonToHexMap.put(hex4, h4);
+        polygonToHexMap.put(hex5, h5);
+        polygonToHexMap.put(hex6, h6);
+        polygonToHexMap.put(hex7, h7);
+        polygonToHexMap.put(hex8, h8);
+        polygonToHexMap.put(hex9, h9);
+        polygonToHexMap.put(hex10, h10);
+        polygonToHexMap.put(hex11, h11);
+        polygonToHexMap.put(hex12, h12);
+        polygonToHexMap.put(hex13, h13);
+        polygonToHexMap.put(hex14, h14);
+        polygonToHexMap.put(hex15, h15);
+        polygonToHexMap.put(hex16, h16);
+        polygonToHexMap.put(hex17, h17);
+        polygonToHexMap.put(hex18, h18);
+        polygonToHexMap.put(hex19, h19);
+        polygonToHexMap.put(hex20, h20);
+        polygonToHexMap.put(hex21, h21);
+        polygonToHexMap.put(hex22, h22);
+        polygonToHexMap.put(hex23, h23);
+        polygonToHexMap.put(hex24, h24);
+        polygonToHexMap.put(hex25, h25);
+        polygonToHexMap.put(hex26, h26);
+        polygonToHexMap.put(hex27, h27);
+        polygonToHexMap.put(hex28, h28);
+        polygonToHexMap.put(hex29, h29);
+        polygonToHexMap.put(hex30, h30);
+        polygonToHexMap.put(hex31, h31);
+        polygonToHexMap.put(hex32, h32);
+        polygonToHexMap.put(hex33, h33);
+        polygonToHexMap.put(hex34, h34);
+        polygonToHexMap.put(hex35, h35);
+        polygonToHexMap.put(hex36, h36);
+        polygonToHexMap.put(hex37, h37);
+        polygonToHexMap.put(hex38, h38);
+        polygonToHexMap.put(hex39, h39);
+        polygonToHexMap.put(hex40, h40);
+        polygonToHexMap.put(hex41, h41);
+        polygonToHexMap.put(hex42, h42);
+        polygonToHexMap.put(hex43, h43);
+        polygonToHexMap.put(hex44, h44);
+        polygonToHexMap.put(hex45, h45);
+        polygonToHexMap.put(hex46, h46);
+        polygonToHexMap.put(hex47, h47);
+        polygonToHexMap.put(hex48, h48);
+        polygonToHexMap.put(hex49, h49);
+        polygonToHexMap.put(hex50, h50);
+        polygonToHexMap.put(hex51, h51);
+        polygonToHexMap.put(hex52, h52);
+        polygonToHexMap.put(hex53, h53);
+        polygonToHexMap.put(hex54, h54);
+        polygonToHexMap.put(hex55, h55);
+        polygonToHexMap.put(hex56, h56);
+        polygonToHexMap.put(hex57, h57);
+        polygonToHexMap.put(hex58, h58);
+        polygonToHexMap.put(hex59, h59);
+        polygonToHexMap.put(hex60, h60);
+        polygonToHexMap.put(hex61, h61);
+        polygonToHexMap.put(hex62, h62);
+        polygonToHexMap.put(hex63, h63);
+        polygonToHexMap.put(hex64, h64);
+        polygonToHexMap.put(hex65, h65);
+        polygonToHexMap.put(hex66, h66);
+        polygonToHexMap.put(hex67, h67);
+        polygonToHexMap.put(hex68, h68);
+        polygonToHexMap.put(hex69, h69);
+        polygonToHexMap.put(hex70, h70);
+        polygonToHexMap.put(hex71, h71);
+        polygonToHexMap.put(hex72, h72);
+        polygonToHexMap.put(hex73, h73);
+        polygonToHexMap.put(hex74, h74);
+        polygonToHexMap.put(hex75, h75);
+        polygonToHexMap.put(hex76, h76);
+        polygonToHexMap.put(hex77, h77);
+        polygonToHexMap.put(hex78, h78);
+        polygonToHexMap.put(hex79, h79);
+        polygonToHexMap.put(hex80, h80);
+        polygonToHexMap.put(hex81, h81);
+        polygonToHexMap.put(hex82, h82);
+        polygonToHexMap.put(hex83, h83);
+        polygonToHexMap.put(hex84, h84);
+        polygonToHexMap.put(hex85, h85);
+        polygonToHexMap.put(hex86, h86);
+        polygonToHexMap.put(hex87, h87);
+        polygonToHexMap.put(hex88, h88);
+        polygonToHexMap.put(hex89, h89);
+        polygonToHexMap.put(hex90, h90);
+        polygonToHexMap.put(hex91, h91);
+        polygonToHexMap.put(hex92, h92);
+        polygonToHexMap.put(hex93, h93);
+        polygonToHexMap.put(hex94, h94);
+        polygonToHexMap.put(hex95, h95);
+        polygonToHexMap.put(hex96, h96);
+        polygonToHexMap.put(hex97, h97);
+        polygonToHexMap.put(hex98, h98);
+        polygonToHexMap.put(hex99, h99);
+        polygonToHexMap.put(hex100, h100);
+        polygonToHexMap.put(hex101, h101);
+        polygonToHexMap.put(hex102, h102);
+        polygonToHexMap.put(hex103, h103);
+        polygonToHexMap.put(hex104, h104);
+        polygonToHexMap.put(hex105, h105);
+        polygonToHexMap.put(hex106, h106);
+        polygonToHexMap.put(hex107, h107);
+        polygonToHexMap.put(hex108, h108);
+        polygonToHexMap.put(hex109, h109);
+        polygonToHexMap.put(hex110, h110);
+        polygonToHexMap.put(hex111, h111);
+        polygonToHexMap.put(hex112, h112);
+        polygonToHexMap.put(hex113, h113);
+        polygonToHexMap.put(hex114, h114);
+        polygonToHexMap.put(hex115, h115);
+        polygonToHexMap.put(hex116, h116);
+        polygonToHexMap.put(hex117, h117);
+        polygonToHexMap.put(hex118, h118);
+        polygonToHexMap.put(hex119, h119);
+        polygonToHexMap.put(hex120, h120);
+        polygonToHexMap.put(hex121, h121);
+        polygonToHexMap.put(hex122, h122);
+        polygonToHexMap.put(hex123, h123);
+        polygonToHexMap.put(hex124, h124);
+        polygonToHexMap.put(hex125, h125);
+        polygonToHexMap.put(hex126, h126);
+        polygonToHexMap.put(hex127, h127);
+
+        hexGrid.linkNeighbors();
 
 
     }
@@ -617,6 +902,10 @@ public class Controller {
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
+
+        setupHexGrid();
+
+        testNeighbors(6,-6,0);
 
      //   stonePlacement = new AudioClip(getClass().getResource("/sounds/stone_place.mp3").toExternalForm());
 
