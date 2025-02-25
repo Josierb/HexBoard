@@ -463,6 +463,157 @@ public class Controller {
     @FXML // fx:id="hex99"
     private Polygon hex99; // Value injected by FXMLLoader
 
+    private void setupHexGrid ()
+    {
+        // Center hexagon
+        Hexagon h1 = new Hexagon(0, 0, 0, hex1);  // Center
+
+// First layer (radius = 1)
+        Hexagon h2 = new Hexagon(0, -1, 1, hex2);  // Top
+        Hexagon h3 = new Hexagon(1, -1, 0, hex3);
+        Hexagon h4 = new Hexagon(1, 0, -1, hex4);
+        Hexagon h5 = new Hexagon(0, 1, -1, hex5);
+        Hexagon h6 = new Hexagon(-1, 1, 0, hex6);
+        Hexagon h7 = new Hexagon(-1, 0, 1, hex7);
+
+// Second layer (radius = 2)
+        Hexagon h8  = new Hexagon(0, -2, 2, hex8);  // Top (above Hex2)
+        Hexagon h9  = new Hexagon(1, -2, 1, hex9);
+        Hexagon h10 = new Hexagon(2, -2, 0, hex10);
+        Hexagon h11 = new Hexagon(2, -1, -1, hex11);
+        Hexagon h12 = new Hexagon(2, 0, -2, hex12);
+        Hexagon h13 = new Hexagon(1, 1, -2, hex13);
+        Hexagon h14 = new Hexagon(0, 2, -2, hex14);
+        Hexagon h15 = new Hexagon(-1, 2, -1, hex15);
+        Hexagon h16 = new Hexagon(-2, 2, 0, hex16);
+        Hexagon h17 = new Hexagon(-2, 1, 1, hex17);
+        Hexagon h18 = new Hexagon(-2, 0, 2, hex18);
+        Hexagon h19 = new Hexagon(-1, -1, 2, hex19);
+
+// Third layer (radius = 3)
+        Hexagon h20 = new Hexagon(0, -3, 3, hex20);  // Top (above Hex8)
+        Hexagon h21 = new Hexagon(1, -3, 2, hex21);
+        Hexagon h22 = new Hexagon(2, -3, 1, hex22);
+        Hexagon h23 = new Hexagon(3, -3, 0, hex23);
+        Hexagon h24 = new Hexagon(3, -2, -1, hex24);
+        Hexagon h25 = new Hexagon(3, -1, -2, hex25);
+        Hexagon h26 = new Hexagon(3, 0, -3, hex26);
+        Hexagon h27 = new Hexagon(2, 1, -3, hex27);
+        Hexagon h28 = new Hexagon(1, 2, -3, hex28);
+        Hexagon h29 = new Hexagon(0, 3, -3, hex29);
+        Hexagon h30 = new Hexagon(-1, 3, -2, hex30);
+        Hexagon h31 = new Hexagon(-2, 3, -1, hex31);
+        Hexagon h32 = new Hexagon(-3, 3, 0, hex32);
+        Hexagon h33 = new Hexagon(-3, 2, 1, hex33);
+        Hexagon h34 = new Hexagon(-3, 1, 2, hex34);
+        Hexagon h35 = new Hexagon(-3, 0, 3, hex35);
+        Hexagon h36 = new Hexagon(-2, -1, 3, hex36);
+        Hexagon h37 = new Hexagon(-1, -2, 3, hex37);
+
+// Fourth layer (radius = 4)
+        Hexagon h38 = new Hexagon(0, -4, 4, hex38);  // Top (above Hex20)
+        Hexagon h39 = new Hexagon(1, -4, 3, hex39);
+        Hexagon h40 = new Hexagon(2, -4, 2, hex40);
+        Hexagon h41 = new Hexagon(3, -4, 1, hex41);
+        Hexagon h42 = new Hexagon(4, -4, 0, hex42);
+        Hexagon h43 = new Hexagon(4, -3, -1, hex43);
+        Hexagon h44 = new Hexagon(4, -2, -2, hex44);
+        Hexagon h45 = new Hexagon(4, -1, -3, hex45);
+        Hexagon h46 = new Hexagon(4, 0, -4, hex46);
+        Hexagon h47 = new Hexagon(3, 1, -4, hex47);
+        Hexagon h48 = new Hexagon(2, 2, -4, hex48);
+        Hexagon h49 = new Hexagon(1, 3, -4, hex49);
+        Hexagon h50 = new Hexagon(0, 4, -4, hex50);  // Bottom (below Hex29)
+        Hexagon h51 = new Hexagon(-1, 4, -3, hex51);
+        Hexagon h52 = new Hexagon(-2, 4, -2, hex52);
+        Hexagon h53 = new Hexagon(-3, 4, -1, hex53);
+        Hexagon h54 = new Hexagon(-4, 4, 0, hex54);
+        Hexagon h55 = new Hexagon(-4, 3, 1, hex55);
+        Hexagon h56 = new Hexagon(-4, 2, 2, hex56);
+        Hexagon h57 = new Hexagon(-4, 1, 3, hex57);
+        Hexagon h58 = new Hexagon(-4, 0, 4, hex58);
+        Hexagon h59 = new Hexagon(-3, -1, 4, hex59);
+        Hexagon h60 = new Hexagon(-2, -2, 4, hex60);
+        Hexagon h61 = new Hexagon(-1, -3, 4, hex61);
+
+// Fifth layer (radius = 5)
+
+
+        Hexagon h62 = new Hexagon(0, -5, 5, hex62);  // top
+        Hexagon h63 = new Hexagon(1, -5, 4, hex63);
+        Hexagon h64 = new Hexagon(2, -5, 3, hex64);
+        Hexagon h65 = new Hexagon(3, -5, 2, hex65);
+        Hexagon h66 = new Hexagon(4, -5, 1, hex66);
+        Hexagon h67 = new Hexagon(5, -5, 0, hex67);  // top right corner
+        Hexagon h68 = new Hexagon(5, -4, -1, hex68);
+        Hexagon h69 = new Hexagon(5, -3, -2, hex69);
+        Hexagon h70 = new Hexagon(5, -2, -3, hex70);
+        Hexagon h71 = new Hexagon(5, -1, -4, hex71);
+        Hexagon h72 = new Hexagon(5, 0, -5, hex72);  // bottom right corner
+        Hexagon h73 = new Hexagon(4, 1, -5, hex73);
+        Hexagon h74 = new Hexagon(3, 2, -5, hex74);
+        Hexagon h75 = new Hexagon(2, 3, -5, hex75);
+        Hexagon h76 = new Hexagon(1, 4, -5, hex76);
+        Hexagon h77 = new Hexagon(0, 5, -5, hex77); // bottom
+        Hexagon h78 = new Hexagon(-1, 5, -4, hex78);
+        Hexagon h79 = new Hexagon(-2, 5, -3, hex79);
+        Hexagon h80 = new Hexagon(-3, 5, -2, hex80);
+        Hexagon h81 = new Hexagon(-4, 5, -1, hex81);
+        Hexagon h82 = new Hexagon(-5, 5, 0, hex82); // bottom left corner
+        Hexagon h83 = new Hexagon(-5, 4, 1, hex83);
+        Hexagon h84 = new Hexagon(-5, 3, 2, hex84);
+        Hexagon h85 = new Hexagon(-5, 2, 3, hex85);
+        Hexagon h86 = new Hexagon(-5, 1, 4, hex86);
+        Hexagon h87 = new Hexagon(-5, 0, 5, hex87); // top left corner
+        Hexagon h88 = new Hexagon(-4, -1, 5, hex88);
+        Hexagon h89 = new Hexagon(-3, -2, 5, hex89);
+        Hexagon h90 = new Hexagon(-2, -3, 5, hex90);
+        Hexagon h91 = new Hexagon(-1, -4, 5, hex91);
+
+// Sixth layer (radius = 6)
+
+        Hexagon h92 = new Hexagon(0, -6, 6, hex92);  // Top
+        Hexagon h93 = new Hexagon(1, -6, 5, hex93);
+        Hexagon h94 = new Hexagon(2, -6, 4, hex94);
+        Hexagon h95 = new Hexagon(3, -6, 3, hex95);
+        Hexagon h96 = new Hexagon(4, -6, 2, hex96);
+        Hexagon h97 = new Hexagon(5, -6, 1, hex97);
+        Hexagon h98 = new Hexagon(6, -6, 0, hex98);  // Top right corner
+        Hexagon h99 = new Hexagon(6, -5, -1, hex99);
+        Hexagon h100 = new Hexagon(6, -4, -2, hex100);
+        Hexagon h101 = new Hexagon(6, -3, -3, hex101);
+        Hexagon h102 = new Hexagon(6, -2, -4, hex102);
+        Hexagon h103 = new Hexagon(6, -1, -5, hex103);
+        Hexagon h104 = new Hexagon(6, 0, -6, hex104);  // Bottom right corner
+        Hexagon h105 = new Hexagon(5, 1, -6, hex105);
+        Hexagon h106 = new Hexagon(4, 2, -6, hex106);
+        Hexagon h107 = new Hexagon(3, 3, -6, hex107);
+        Hexagon h108 = new Hexagon(2, 4, -6, hex108);
+        Hexagon h109 = new Hexagon(1, 5, -6, hex109);
+        Hexagon h110 = new Hexagon(0, 6, -6, hex110);  // Bottom
+        Hexagon h111 = new Hexagon(-1, 6, -5, hex111);
+        Hexagon h112 = new Hexagon(-2, 6, -4, hex112);
+        Hexagon h113 = new Hexagon(-3, 6, -3, hex113);
+        Hexagon h114 = new Hexagon(-4, 6, -2, hex114);
+        Hexagon h115 = new Hexagon(-5, 6, -1, hex115);
+        Hexagon h116 = new Hexagon(-6, 6, 0, hex116);  // Bottom left corner
+        Hexagon h117 = new Hexagon(-6, 5, 1, hex117);
+        Hexagon h118 = new Hexagon(-6, 4, 2, hex118);
+        Hexagon h119 = new Hexagon(-6, 3, 3, hex119);
+        Hexagon h120 = new Hexagon(-6, 2, 4, hex120);
+        Hexagon h121 = new Hexagon(-6, 1, 5, hex121);
+        Hexagon h122 = new Hexagon(-6, 0, 6, hex122);  // Top left corner
+        Hexagon h123 = new Hexagon(-5, -1, 6, hex123);
+        Hexagon h124 = new Hexagon(-4, -2, 6, hex124);
+        Hexagon h125 = new Hexagon(-3, -3, 6, hex125);
+        Hexagon h126 = new Hexagon(-2, -4, 6, hex126);
+        Hexagon h127 = new Hexagon(-1, -5, 6, hex127);
+
+
+
+
+    }
+
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
