@@ -14,7 +14,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.control.Label;
-import javafx.scene.media.AudioClip;
+// import javafx.scene.media.AudioClip;
 
 
 
@@ -22,7 +22,7 @@ public class Controller {
 
     // Tracking which players
     private boolean isRedTurn = true;
-    private AudioClip stonePlacement;
+ //   private AudioClip stonePlacement;
 
     @FXML
     private Label turnlabel;
@@ -40,7 +40,7 @@ public class Controller {
                 turnlabel.setText("Reds Turn");
             }
             isRedTurn = !isRedTurn;
-            stonePlacement.play();
+           // stonePlacement.play();
 
         }
     }
@@ -467,7 +467,7 @@ public class Controller {
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
 
-        stonePlacement = new AudioClip(getClass().getResource("/sounds/stone_place.mp3").toExternalForm());
+     //   stonePlacement = new AudioClip(getClass().getResource("/sounds/stone_place.mp3").toExternalForm());
 
         assert hex1 != null : "fx:id=\"hex1\" was not injected: check your FXML file 'hello-view.fxml'.";
         assert hex10 != null : "fx:id=\"hex10\" was not injected: check your FXML file 'hello-view.fxml'.";
