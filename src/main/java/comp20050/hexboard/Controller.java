@@ -62,7 +62,7 @@ public class Controller {
     void getHexID(MouseEvent event) {
         Polygon hexagon = (Polygon) event.getSource();
 
-        if(hexagon.getFill().equals(Color.LIGHTGRAY)){
+        if(hexagon.getFill().equals(Color.DARKMAGENTA)){
             if(isBlueTurn){
                 hexagon.setFill(tronBlue);
                 turnlabel.setText("Orange's Turn");
@@ -93,14 +93,14 @@ public class Controller {
         Polygon hexagon = (Polygon) event.getSource();
 
         if (hexagon.getFill().equals(hexNavy)) {
-            hexagon.setFill(Color.LIGHTGRAY);
+            hexagon.setFill(Color.DARKMAGENTA);
         }
     }
 
     @FXML
     void exitHexHover(MouseEvent event) {
         Polygon hexagon = (Polygon) event.getSource();
-        if (hexagon.getFill().equals(Color.LIGHTGRAY)) {
+        if (hexagon.getFill().equals(Color.DARKMAGENTA)) {
             hexagon.setFill(hexNavy);
         }
     }
