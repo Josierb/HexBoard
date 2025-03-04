@@ -29,6 +29,10 @@ public class Controller {
     private boolean isBlueTurn = true;
  //   private AudioClip stonePlacement;
 
+    Color hexNavy = Color.web("#010437");
+    Color tronBlue = Color.web("#08F7FE"); // Tron Neon Blue
+    Color tronOrange = Color.web("#FF8000"); // Tron Neon Orange
+
     @FXML
     private Label turnlabel;
 
@@ -57,8 +61,7 @@ public class Controller {
     @FXML
     void getHexID(MouseEvent event) {
         Polygon hexagon = (Polygon) event.getSource();
-        Color tronBlue = Color.web("#08F7FE"); // Tron Neon Blue
-        Color tronOrange = Color.web("#FF8000"); // Tron Neon Orange
+
         if(hexagon.getFill().equals(Color.LIGHTGRAY)){
             if(isBlueTurn){
                 hexagon.setFill(tronBlue);
@@ -89,7 +92,7 @@ public class Controller {
     void onHexHover(MouseEvent event) {
         Polygon hexagon = (Polygon) event.getSource();
 
-        if (hexagon.getFill().equals(Color.WHITE)) {
+        if (hexagon.getFill().equals(hexNavy)) {
             hexagon.setFill(Color.LIGHTGRAY);
         }
     }
@@ -98,7 +101,7 @@ public class Controller {
     void exitHexHover(MouseEvent event) {
         Polygon hexagon = (Polygon) event.getSource();
         if (hexagon.getFill().equals(Color.LIGHTGRAY)) {
-            hexagon.setFill(Color.WHITE);
+            hexagon.setFill(hexNavy);
         }
     }
 
