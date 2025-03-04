@@ -3,11 +3,59 @@ Polygon:hover{
     -fx-cursor: hand;
 }
 
-Label{
-
+Label {
+    -fx-text-fill: #0ff; /* Neon Cyan */
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-effect:
+            dropshadow(gaussian, black, 2, 8, 0, 0), /* Black Outline */
+            dropshadow(gaussian, #0ff, 10, 3, 0, 0); /* Neon Glow */
 }
 
-#quitbutton{
+.button {
+    -fx-background-color: #ff00ff; /* Pink background */
+    -fx-text-fill: #0ff; /* White text */
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 20px;
+    /*-fx-border: 3px solid black;*/
+    -fx-border-radius: 25px; /* Rounded edges */
+    -fx-scale-x: 1.2;
+    -fx-scale-y: 1.2;
+    -fx-effect:
+            dropshadow(gaussian, black, 2, 8, 0, 0), /* Black Outline */
+            dropshadow(gaussian, #0ff, 10, 3, 0, 0); /* Neon Glow */
+}
+
+.button:hover {
+    -fx-cursor: hand;
+    -fx-scale-x: 1.3;
+    -fx-scale-y: 1.3;
+}
+
+/*
+.button {
+    -fx-background-color: #ff00ff;
+    -fx-text-fill: #0ff;
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-effect:
+            dropshadow(gaussian, black, 3, 1, 0, 0),
+            dropshadow(gaussian, #0ff, 10, 0.8, 0, 0);
+}
+
+.button:hover {
+    -fx-background-color: #ff00ff;
+    -fx-text-fill: black;
+    -fx-effect:
+            dropshadow(gaussian, black, 5, 1, 0, 0),
+            dropshadow(gaussian, #0ff, 15, 0.9, 0, 0);
+}
+*/
+/*#quitbutton{
     -fx-background-color: linear-gradient(to bottom, #ff0000, #990000);
     -fx-text-fill: white;
     -fx-font-size: 16px;
@@ -21,6 +69,10 @@ Label{
 #quitbutton:hover{
     -fx-background-color: linear-gradient(to bottom, #cc0000, #660000);
     -fx-cursor: hand;
-    -fx-scale-x: 1.2;
-    -fx-scale-y: 1.2;
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
 }
+
+#quitbutton:pressed{
+    -fx-background-color: #222;
+}*/
