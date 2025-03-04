@@ -4,7 +4,7 @@ Polygon:hover{
 }
 
 Label {
-    -fx-text-fill: #0ff; /* Neon Cyan */
+    -fx-text-fill: #ff00ff; /* Neon Cyan */
     -fx-font-size: 24px;
     -fx-font-weight: bold;
     -fx-effect:

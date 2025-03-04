@@ -26,7 +26,7 @@ public class Controller {
     private Map<Polygon, Hexagon> polygonToHexMap = new HashMap<>();
 
     // Tracking which players
-    private boolean isRedTurn = true;
+    private boolean isBlueTurn = true;
  //   private AudioClip stonePlacement;
 
     @FXML
@@ -57,16 +57,20 @@ public class Controller {
     @FXML
     void getHexID(MouseEvent event) {
         Polygon hexagon = (Polygon) event.getSource();
+        Color tronBlue = Color.web("#08F7FE"); // Tron Neon Blue
+        Color tronOrange = Color.web("#FF8000"); // Tron Neon Orange
         if(hexagon.getFill().equals(Color.LIGHTGRAY)){
-            if(isRedTurn){
-                hexagon.setFill(Color.RED);
-                turnlabel.setText("Blues Turn");
+            if(isBlueTurn){
+                hexagon.setFill(tronBlue);
+                turnlabel.setText("Orange's Turn");
+                turnlabel.setTextFill(tronOrange);
             }
             else{
-                hexagon.setFill(Color.BLUE);
-                turnlabel.setText("Reds Turn");
+                hexagon.setFill(tronOrange);
+                turnlabel.setText("Blue's Turn");
+                turnlabel.setTextFill(tronBlue);
             }
-            isRedTurn = !isRedTurn;
+            isBlueTurn = !isBlueTurn;
            // stonePlacement.play();
 
         }
