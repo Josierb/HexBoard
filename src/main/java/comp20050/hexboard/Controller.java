@@ -63,7 +63,7 @@ public class Controller {
     void getHexID(MouseEvent event) {
         Polygon hexagon = (Polygon) event.getSource();
 
-        // Find corresponding Hexagon object
+        // Find the corresponding Hexagon object
         Hexagon clickedHex = hexGrid.getHexByShape(hexagon);
 
         if (clickedHex == null) {
@@ -71,25 +71,21 @@ public class Controller {
             return;
         }
 
-        // Call your existing testNeighbors method
-        testNeighbors(clickedHex.getX(), clickedHex.getY(), clickedHex.getZ());
-
-        if(hexagon.getFill().equals(Color.DARKMAGENTA)){
-            if(isBlueTurn){
+        //  Only change color if it's currently DARKMAGENTA
+        if (hexagon.getFill().equals(Color.DARKMAGENTA)) {
+            if (isBlueTurn) {
                 hexagon.setFill(tronBlue);
                 turnlabel.setText("Orange's Turn");
                 turnlabel.setTextFill(tronOrange);
-            }
-            else{
+            } else {
                 hexagon.setFill(tronOrange);
                 turnlabel.setText("Blue's Turn");
                 turnlabel.setTextFill(tronBlue);
             }
             isBlueTurn = !isBlueTurn;
-           // stonePlacement.play();
-
         }
     }
+
 
     @FXML
     private Button quitbutton;
@@ -103,11 +99,25 @@ public class Controller {
     @FXML
     void onHexHover(MouseEvent event) {
         Polygon hexagon = (Polygon) event.getSource();
+        Hexagon hoveredHex = hexGrid.getHexByShape(hexagon); // Get the Hexagon object
 
+        if (hoveredHex == null) {
+            System.out.println("Hovered hex not found!");
+            return;
+        }
+
+        // Change color when hovered
         if (hexagon.getFill().equals(hexNavy)) {
             hexagon.setFill(Color.DARKMAGENTA);
         }
+
+        //  Print neighbors dynamically
+        System.out.println("Hovered Hex: (" + hoveredHex.getX() + ", " + hoveredHex.getY() + ", " + hoveredHex.getZ() + ")");
+        for (Hexagon neighbor : hoveredHex.getNeighbors().values()) {
+            System.out.println("Neighbor: (" + neighbor.getX() + ", " + neighbor.getY() + ", " + neighbor.getZ() + ")");
+        }
     }
+
 
     @FXML
     void exitHexHover(MouseEvent event) {

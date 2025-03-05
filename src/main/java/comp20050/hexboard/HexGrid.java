@@ -27,8 +27,6 @@ public class HexGrid {
         return null; // Return null if no match is found
     }
 
-
-
     //NOT RIGHT
     public boolean isValidMove(int x, int y, int z) {
         return false;
