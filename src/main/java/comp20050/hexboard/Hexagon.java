@@ -41,6 +41,7 @@ public class Hexagon {
         return neighbors;
     }
 
+
     public int getX() { return q; }
     public int getY() { return r; }
     public int getZ() { return s; }

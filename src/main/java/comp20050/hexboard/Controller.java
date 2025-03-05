@@ -58,9 +58,21 @@ public class Controller {
 
 
 
+
     @FXML
     void getHexID(MouseEvent event) {
         Polygon hexagon = (Polygon) event.getSource();
+
+        // Find corresponding Hexagon object
+        Hexagon clickedHex = hexGrid.getHexByShape(hexagon);
+
+        if (clickedHex == null) {
+            System.out.println("Hexagon not found!");
+            return;
+        }
+
+        // Call your existing testNeighbors method
+        testNeighbors(clickedHex.getX(), clickedHex.getY(), clickedHex.getZ());
 
         if(hexagon.getFill().equals(Color.DARKMAGENTA)){
             if(isBlueTurn){
@@ -912,7 +924,6 @@ public class Controller {
 
         setupHexGrid();
 
-        testNeighbors(6,-6,0);
 
      //   stonePlacement = new AudioClip(getClass().getResource("/sounds/stone_place.mp3").toExternalForm());
 

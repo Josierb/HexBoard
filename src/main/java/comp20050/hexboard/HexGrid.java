@@ -2,17 +2,32 @@ package comp20050.hexboard;
 
 import java.util.HashMap;
 import java.util.Map;
+import javafx.scene.shape.Polygon;
+
 
 public class HexGrid {
     private Map<String, Hexagon> hexMap = new HashMap<>(); // Stores hexagons by "x,y,z" keys
 
     public void addHex(Hexagon hex) {
-        hexMap.put(hex.getX() + "," + hex.getY() + "," + hex.getZ(), hex);
+        String key = hex.getX() + "," + hex.getY() + "," + hex.getZ();
+        hexMap.put(key, hex);
     }
 
     public Hexagon getHex(int x, int y, int z) {
-        return hexMap.get(x + "," + y + "," + z);
+        String key = x + "," + y + "," + z;
+        return hexMap.getOrDefault(key, null);
     }
+
+    public Hexagon getHexByShape(Polygon shape) {
+        for (Hexagon hex : hexMap.values()) {  // Iterate through all hexagons in the grid
+            if (hex.getHexShape() == shape) {  // Compare shapes
+                return hex;
+            }
+        }
+        return null; // Return null if no match is found
+    }
+
+
 
     //NOT RIGHT
     public boolean isValidMove(int x, int y, int z) {
