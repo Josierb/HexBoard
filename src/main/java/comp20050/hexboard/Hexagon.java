@@ -33,11 +33,8 @@ public class Hexagon {
         neighbors.put(direction, neighbor);
     }
 
-    public Hexagon getNeighbor(String direction) {
-        return neighbors.get(direction);
-    }
 
-    public Map<String, Hexagon> getNeighbors() {  // ✅ New getter method
+    public Map<String, Hexagon> getNeighbors() {  //  New getter method
         return neighbors;
     }
 

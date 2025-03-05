@@ -5,9 +5,7 @@
 package comp20050.hexboard;
 
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -37,28 +35,6 @@ public class Controller {
     private Label turnlabel;
 
 
-
-    public void testNeighbors(int x, int y, int z) {
-        Hexagon hex = hexGrid.getHex(x, y, z);
-
-        if (hex == null) {
-            System.out.println("Hexagon at (" + x + ", " + y + ", " + z + ") not found.");
-            return;
-        }
-
-        System.out.println("Neighbors of Hexagon (" + x + ", " + y + ", " + z + "):");
-
-        for (Map.Entry<String, Hexagon> entry : hex.getNeighbors().entrySet()) {
-            Hexagon neighbor = entry.getValue();
-            System.out.println(" → Neighbor at (" + neighbor.getX() + ", " + neighbor.getY() + ", " + neighbor.getZ() + ")");
-        }
-    }
-
-
-
-
-
-
     @FXML
     void getHexID(MouseEvent event) {
         Polygon hexagon = (Polygon) event.getSource();
@@ -71,19 +47,35 @@ public class Controller {
             return;
         }
 
-        //  Only change color if it's currently DARKMAGENTA
+        // Determine the current player's color based on the turn
+        Color currentColor = isBlueTurn ? tronBlue : tronOrange;
+
+
+        // If none of the neighbors share the same color, allow the move.
+        // (Assuming you only want to allow moves when the current hex is in a specific state.)
         if (hexagon.getFill().equals(Color.DARKMAGENTA)) {
+            hexagon.setFill(currentColor);
+            clickedHex.setOwner(currentColor);
+
             if (isBlueTurn) {
-                hexagon.setFill(tronBlue);
                 turnlabel.setText("Orange's Turn");
                 turnlabel.setTextFill(tronOrange);
             } else {
-                hexagon.setFill(tronOrange);
                 turnlabel.setText("Blue's Turn");
                 turnlabel.setTextFill(tronBlue);
             }
             isBlueTurn = !isBlueTurn;
         }
+    }
+
+
+    private List<Hexagon> getHexNeighbors(Hexagon hex) {
+        List<Hexagon> neighbors = new ArrayList<>();
+        if (hex != null) {
+            // Add all neighbor Hexagon objects from the hex's neighbors map
+            neighbors.addAll(hex.getNeighbors().values());
+        }
+        return neighbors;
     }
 
 
@@ -106,16 +98,24 @@ public class Controller {
             return;
         }
 
+        Color currentColor = isBlueTurn ? tronBlue : tronOrange;
+
+
+        // Check each neighbor of the clicked hexagon
+        List<Hexagon> neighbors = getHexNeighbors(hoveredHex);
+        for (Hexagon neighbor : neighbors) {
+            // If any neighbor's fill color is the same as currentColor, block the move.
+            if (neighbor.getHexShape().getFill().equals(currentColor)) {
+                System.out.println("Invalid move! Cannot place next to a hexagon of the same color.");
+                return; // Cancel the move.
+            }
+        }
+
         // Change color when hovered
         if (hexagon.getFill().equals(hexNavy)) {
             hexagon.setFill(Color.DARKMAGENTA);
         }
 
-        //  Print neighbors dynamically
-        System.out.println("Hovered Hex: (" + hoveredHex.getX() + ", " + hoveredHex.getY() + ", " + hoveredHex.getZ() + ")");
-        for (Hexagon neighbor : hoveredHex.getNeighbors().values()) {
-            System.out.println("Neighbor: (" + neighbor.getX() + ", " + neighbor.getY() + ", " + neighbor.getZ() + ")");
-        }
     }
 
 
