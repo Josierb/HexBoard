@@ -14,7 +14,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.control.Label;
-// import javafx.scene.media.AudioClip;
+import javafx.scene.media.AudioClip;
 
 
 
@@ -25,7 +25,7 @@ public class Controller {
 
     // Tracking which players
     private boolean isBlueTurn = true;
- //   private AudioClip stonePlacement;
+    private AudioClip stonePlacement;
 
     Color hexNavy = Color.web("#010437");
     Color tronBlue = Color.web("#08F7FE"); // Tron Neon Blue
@@ -64,6 +64,7 @@ public class Controller {
                 turnlabel.setText("Blue's Turn");
                 turnlabel.setTextFill(tronBlue);
             }
+            stonePlacement.play();
             isBlueTurn = !isBlueTurn;
         }
     }
@@ -935,7 +936,7 @@ public class Controller {
         setupHexGrid();
 
 
-     //   stonePlacement = new AudioClip(getClass().getResource("/sounds/stone_place.mp3").toExternalForm());
+        stonePlacement = new AudioClip(getClass().getResource("/sounds/stone_place.mp3").toExternalForm());
 
         assert hex1 != null : "fx:id=\"hex1\" was not injected: check your FXML file 'hello-view.fxml'.";
         assert hex10 != null : "fx:id=\"hex10\" was not injected: check your FXML file 'hello-view.fxml'.";
