@@ -25,6 +25,11 @@ public class Hexagon {
         hexShape.setFill(owner);
     }
 
+    //added this Mar 25
+    public Color getOwner() {
+        return this.owner;
+    }
+
     public boolean isEmpty() {
         return owner == null;
     }

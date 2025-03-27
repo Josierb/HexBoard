@@ -18,10 +18,14 @@ public class HexOustApplication extends Application {
         primaryStage.setFullScreen(true);
         primaryStage.show();
         scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+
     }
+
+
 
     public static void main(String[] args) {
         launch(args);
+
     }
 
 }
