@@ -128,20 +128,30 @@ public class Controller {
 
 
 
-    //added this Mar 25
     private boolean isCaptureMove(Hexagon clickedHex) {
         //set current color
         Color currentColor = clickedHex.getOwner();
         // Get the opponent's color
         Color opponentColor = (currentColor.equals(tronBlue)) ? tronOrange : tronBlue;
 
-       //find group of adjacent hex with current color
-        Set<Hexagon> connectedGroup = findConnectedGroup(clickedHex, currentColor, new HashSet<>());
 
         boolean captureMove = false;
 
 
+        //find group of adjacent hex with current color
+        Set<Hexagon> neighbors1 = new HashSet<>();
+        int currentGroupSize = findConnectedGroupSize(clickedHex, currentColor, neighbors1);
+
+        Set<Hexagon> neighbors2 = new HashSet<>();
+        int oppGroupSize = findConnectedGroupSize(clickedHex, currentColor, neighbors2);
+
+
+        if (currentGroupSize > oppGroupSize) {
+            captureMove = true;
+        }
+
         return captureMove;
+
     }
 
     /**
@@ -151,10 +161,7 @@ public class Controller {
      * @param visited Set to track visited hexagons (pass empty HashSet initially)
      * @return Set of all connected hexagons with matching color
      */
-    public static Set<Hexagon> findConnectedGroup(Hexagon startHex, Color targetColor, Set<Hexagon> visited) {
-        //return length
-        Set<Hexagon> connectedGroup = new HashSet<>();
-
+    public static int findConnectedGroupSize(Hexagon startHex, Color targetColor, Set<Hexagon> visited) {
         // Base cases:
         // 1. Hex is null
         // 2. Hex is empty (no owner)
@@ -163,56 +170,20 @@ public class Controller {
         if (startHex == null || startHex.isEmpty() ||
                 !targetColor.equals(startHex.getOwner()) ||
                 visited.contains(startHex)) {
-            return connectedGroup;
+            return 0;
         }
 
-        // Add current hex to group and mark as visited
-        connectedGroup.add(startHex);
+        // Mark current hex as visited
         visited.add(startHex);
+        int count = 1;  // Count this hex
 
-        // Recursively check all neighbors using the Hexagon class's neighbor map
+        // Recursively count all valid neighbors
         for (Hexagon neighbor : startHex.getNeighbors().values()) {
-            connectedGroup.addAll(findConnectedGroup(neighbor, targetColor, visited));
+            count += findConnectedGroupSize(neighbor, targetColor, visited);
         }
 
-        return connectedGroup;
+        return count;
     }
-
-
-    public void testAndPrintConnectedGroup() {
-        // Create a simple hexagon grid for testing
-        Hexagon centerHex = new Hexagon(0, 0, 0, new Polygon());
-        Hexagon northHex = new Hexagon(0, -1, 1, new Polygon());
-        Hexagon northeastHex = new Hexagon(1, -1, 0, new Polygon());
-
-        // Set up connections
-        centerHex.addNeighbor("N", northHex);
-        centerHex.addNeighbor("NE", northeastHex);
-        northHex.addNeighbor("S", centerHex);
-        northeastHex.addNeighbor("SW", centerHex);
-
-        // Set colors - make a small blue group
-        centerHex.setOwner(tronBlue);
-        northHex.setOwner(tronBlue);
-        northeastHex.setOwner(tronOrange); // Different color
-
-        // Test the group
-        System.out.println("Testing connected group from center hex:");
-        Set<Hexagon> connectedGroup = findConnectedGroup(centerHex, tronBlue, new HashSet<>());
-
-        // Print results
-        System.out.println("Found " + connectedGroup.size() + " connected hexes:");
-        for (Hexagon hex : connectedGroup) {
-            System.out.println("Hex at (" + hex.getX() + "," + hex.getY() + "," + hex.getZ() + ")");
-        }
-
-        // Expected: Should find centerHex and northHex (2 hexes)
-        // northeastHex should not be included (different color)
-        assert connectedGroup.size() == 2 : "Should find 2 connected blue hexes";
-    }
-
-
-
 
 
 
@@ -1037,7 +1008,6 @@ public class Controller {
     void initialize() {
 
         setupHexGrid();
-        testAndPrintConnectedGroup();
 
         stonePlacement = new AudioClip(getClass().getResource("/sounds/stone_place.mp3").toExternalForm());
 
