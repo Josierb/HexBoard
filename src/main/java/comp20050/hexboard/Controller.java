@@ -1,12 +1,7 @@
-/**
- * Sample Skeleton for 'hello-view.fxml' Controller Class
- */
-
 package comp20050.hexboard;
 
 import java.net.URL;
 import java.util.*;
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -18,35 +13,33 @@ import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
-
-
-
 public class Controller {
 
+    // Set up Grid for storing Hexagon objects
     private HexGrid hexGrid = new HexGrid();
+    // Set up Map for linking the FXML Polygons to Hexagon objects
     private Map<Polygon, Hexagon> polygonToHexMap = new HashMap<>();
 
-    // Tracking which players
+    // Boolean for tracking which players turn it is
     private boolean isBlueTurn = true;
+
+    // Set up for audio used
     private AudioClip stonePlacement;
     private MediaPlayer bgMusicPlayer;
 
-
-
+    // Set up colours used
     Color hexNavy = Color.web("#010437");
     Color tronBlue = Color.web("#08F7FE"); // Tron Neon Blue
     Color tronOrange = Color.web("#FF8000"); // Tron Neon Orange
 
+    // Set up Label for displaying who's turn it is
     @FXML
     private Label turnlabel;
 
-
-    //we need to beak up this method ->getHexID should just return a Hex ID
+    // Method for associating the polygon and hexagon object
     @FXML
     void getHexID(MouseEvent event) {
         Polygon hexagon = (Polygon) event.getSource();
-
-        // Find the corresponding Hexagon object
         Hexagon clickedHex = hexGrid.getHexByShape(hexagon);
 
         if (clickedHex == null) {
@@ -54,16 +47,21 @@ public class Controller {
             return;
         }
 
+        // Call makeMove method with associated Hexagon and Polygon
+        makeMove(clickedHex, hexagon);
+    }
+
+    // Method for making a move
+    private void makeMove(Hexagon clickedHex, Polygon hexagon) {
         // Determine the current player's color based on the turn
         Color currentColor = isBlueTurn ? tronBlue : tronOrange;
 
-
-        // If none of the neighbors share the same color, allow the move.
-        // (Assuming you only want to allow moves when the current hex is in a specific state.)
+        // If the hexagon is unclaimed, allow the move
         if (hexagon.getFill().equals(Color.DARKMAGENTA)) {
             hexagon.setFill(currentColor);
             clickedHex.setOwner(currentColor);
 
+            // Update the turn indicator
             if (isBlueTurn) {
                 turnlabel.setText("Orange's Turn");
                 turnlabel.setTextFill(tronOrange);
@@ -71,10 +69,64 @@ public class Controller {
                 turnlabel.setText("Blue's Turn");
                 turnlabel.setTextFill(tronBlue);
             }
+
+            // Play sound effect and switch turn
             stonePlacement.play();
             isBlueTurn = !isBlueTurn;
         }
     }
+
+    // Method for features called when hexagon is hovered on
+    @FXML
+    void onHexHover(MouseEvent event) {
+
+        Polygon hexagon = (Polygon) event.getSource();
+        Hexagon hoveredHex = hexGrid.getHexByShape(hexagon); // Get the Hexagon object
+
+        if (hoveredHex == null) {
+            System.out.println("Hovered hex not found!");
+            return;
+        }
+
+        Color currentColor = isBlueTurn ? tronBlue : tronOrange;
+
+        if(isValidMove(hexagon, hoveredHex, currentColor)) {
+            // Change color when hovered
+            if (hexagon.getFill().equals(hexNavy)) {
+                hexagon.setFill(Color.DARKMAGENTA);
+            }
+        }
+
+    }
+
+    boolean isValidMove(Polygon hexagon, Hexagon hoveredHex, Color currentColor) {
+        // Check each neighbor of the clicked hexagon
+        List<Hexagon> neighbors = getHexNeighbors(hoveredHex);
+        for (Hexagon neighbor : neighbors) {
+            // If any neighbor's fill color is the same as currentColor, block the move.
+            if (neighbor.getHexShape().getFill().equals(currentColor)) {
+                System.out.println("Invalid move! Cannot place next to a hexagon of the same color.");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Method for creating List of all neighbours of a hexagon
+    private List<Hexagon> getHexNeighbors(Hexagon hex) {
+        // List for storing neighbours
+        List<Hexagon> neighbors = new ArrayList<>();
+        if (hex != null) {
+            // Add all neighbor Hexagon objects from the hex's neighbors map
+            neighbors.addAll(hex.getNeighbors().values());
+        }
+        // Return the list of all neighbours
+        return neighbors;
+    }
+
+
+
+
 
     //added this Mar 25
     private boolean isCaptureMove(Hexagon clickedHex) {
@@ -160,55 +212,20 @@ public class Controller {
     }
 
 
-    private List<Hexagon> getHexNeighbors(Hexagon hex) {
-        List<Hexagon> neighbors = new ArrayList<>();
-        if (hex != null) {
-            // Add all neighbor Hexagon objects from the hex's neighbors map
-            neighbors.addAll(hex.getNeighbors().values());
-        }
-        return neighbors;
-    }
 
 
+
+
+    // Button for quitting
     @FXML
     private Button quitbutton;
 
+    // Method for quitting game when quitbutton is clicked
     @FXML
     void quit(MouseEvent event) {
         Platform.exit();
         System.exit(0);
     }
-
-    @FXML
-    void onHexHover(MouseEvent event) {
-        Polygon hexagon = (Polygon) event.getSource();
-        Hexagon hoveredHex = hexGrid.getHexByShape(hexagon); // Get the Hexagon object
-
-        if (hoveredHex == null) {
-            System.out.println("Hovered hex not found!");
-            return;
-        }
-
-        Color currentColor = isBlueTurn ? tronBlue : tronOrange;
-
-
-        // Check each neighbor of the clicked hexagon
-        List<Hexagon> neighbors = getHexNeighbors(hoveredHex);
-        for (Hexagon neighbor : neighbors) {
-            // If any neighbor's fill color is the same as currentColor, block the move.
-            if (neighbor.getHexShape().getFill().equals(currentColor)) {
-                System.out.println("Invalid move! Cannot place next to a hexagon of the same color.");
-                return; // Cancel the move.
-            }
-        }
-
-        // Change color when hovered
-        if (hexagon.getFill().equals(hexNavy)) {
-            hexagon.setFill(Color.DARKMAGENTA);
-        }
-
-    }
-
 
     @FXML
     void exitHexHover(MouseEvent event) {
@@ -217,10 +234,6 @@ public class Controller {
             hexagon.setFill(hexNavy);
         }
     }
-
-
-
-
 
 
     @FXML // ResourceBundle that was given to the FXMLLoader
