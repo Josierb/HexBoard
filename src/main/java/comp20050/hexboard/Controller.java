@@ -52,7 +52,7 @@ public class Controller {
     }
 
     // Method for making a move
-    private void makeMove(Hexagon clickedHex, Polygon hexagon) {
+    /*private void makeMove(Hexagon clickedHex, Polygon hexagon) {
         // Determine the current player's color based on the turn
         Color currentColor = isBlueTurn ? tronBlue : tronOrange;
 
@@ -74,7 +74,38 @@ public class Controller {
             stonePlacement.play();
             isBlueTurn = !isBlueTurn;
         }
+    }*/
+
+    private void makeMove(Hexagon clickedHex, Polygon hexagon) {
+        // Determine the current player's color based on the turn
+        Color currentColor = isBlueTurn ? tronBlue : tronOrange;
+
+        // If the hexagon is unclaimed, allow the move
+        if (hexagon.getFill().equals(Color.DARKMAGENTA)) {
+            hexagon.setFill(currentColor);
+            clickedHex.setOwner(currentColor);
+
+            // Check if this move results in a capture
+            boolean captureMove = isCaptureMove(clickedHex, currentColor);
+            System.out.println("Capture move detected: " + captureMove);
+
+            if (captureMove) {
+                Set<Hexagon> capturedHexes = getCapturedHexes(clickedHex);
+                if (!capturedHexes.isEmpty()) {
+                    captureHexagons(capturedHexes);
+                }
+            } else {
+                // Normal move: switch turn
+                isBlueTurn = !isBlueTurn;
+                turnlabel.setText(isBlueTurn ? "Blue's Turn" : "Orange's Turn");
+                turnlabel.setTextFill(isBlueTurn ? tronBlue : tronOrange);
+            }
+
+            // Play sound effect
+            stonePlacement.play();
+        }
     }
+
 
     // Method for features called when hexagon is hovered on
     @FXML
@@ -90,7 +121,7 @@ public class Controller {
 
         Color currentColor = isBlueTurn ? tronBlue : tronOrange;
 
-        if(isValidMove(hexagon, hoveredHex, currentColor)) {
+        if(isValidMove(hexagon, hoveredHex, currentColor) /*|| isCaptureMove(hoveredHex, currentColor)*/) {
             // Change color when hovered
             if (hexagon.getFill().equals(hexNavy)) {
                 hexagon.setFill(Color.DARKMAGENTA);
@@ -104,7 +135,7 @@ public class Controller {
         List<Hexagon> neighbors = getHexNeighbors(hoveredHex);
         for (Hexagon neighbor : neighbors) {
             // If any neighbor's fill color is the same as currentColor, block the move.
-            if (neighbor.getHexShape().getFill().equals(currentColor)) {
+            if (neighbor.getHexShape().getFill().equals(currentColor) ) {
                 System.out.println("Invalid move! Cannot place next to a hexagon of the same color.");
                 return false;
             }
@@ -128,7 +159,7 @@ public class Controller {
 
 
 
-    private boolean isCaptureMove(Hexagon clickedHex) {
+    /*private boolean isCaptureMove(Hexagon clickedHex) {
         //set current color
         Color currentColor = clickedHex.getOwner();
         // Get the opponent's color
@@ -152,7 +183,29 @@ public class Controller {
 
         return captureMove;
 
+    }*/
+
+    private boolean isCaptureMove(Hexagon clickedHex, Color currentColor) {
+        //Color currentColor = clickedHex.getOwner();
+        Color opponentColor = (currentColor.equals(tronBlue)) ? tronOrange : tronBlue;
+
+        // Find player's connected group size
+        Set<Hexagon> playerGroup = new HashSet<>();
+        int playerGroupSize = findConnectedGroupSize(clickedHex, currentColor, playerGroup);
+
+        // Find opponent's smallest connected group around clicked hex
+        int smallestOpponentGroup = Integer.MAX_VALUE;
+        for (Hexagon neighbor : clickedHex.getNeighbors().values()) {
+            if (neighbor.getOwner() != null && neighbor.getOwner().equals(opponentColor)) {
+                Set<Hexagon> opponentGroup = new HashSet<>();
+                int oppGroupSize = findConnectedGroupSize(neighbor, opponentColor, opponentGroup);
+                smallestOpponentGroup = Math.min(smallestOpponentGroup, oppGroupSize);
+            }
+        }
+
+        return (smallestOpponentGroup != Integer.MAX_VALUE) && (playerGroupSize >= smallestOpponentGroup);
     }
+
 
     /**
      * Finds all connected hexagons of the same color starting from a given hexagon
@@ -183,6 +236,38 @@ public class Controller {
         }
 
         return count;
+    }
+
+    private Set<Hexagon> getCapturedHexes(Hexagon clickedHex) {
+        Color currentColor = clickedHex.getOwner();
+        Color opponentColor = (currentColor.equals(tronBlue)) ? tronOrange : tronBlue;
+        Set<Hexagon> capturedHexes = new HashSet<>();
+
+        // Find player's connected group size
+        Set<Hexagon> playerGroup = new HashSet<>();
+        int playerGroupSize = findConnectedGroupSize(clickedHex, currentColor, playerGroup);
+
+        // Check all opponent neighbors
+        for (Hexagon neighbor : clickedHex.getNeighbors().values()) {
+            if (neighbor.getOwner() != null && neighbor.getOwner().equals(opponentColor)) {
+                // Find opponent's connected group
+                Set<Hexagon> opponentGroup = new HashSet<>();
+                int opponentGroupSize = findConnectedGroupSize(neighbor, opponentColor, opponentGroup);
+
+                // Capture occurs if opponent's group is smaller
+                if (playerGroupSize > opponentGroupSize) {
+                    capturedHexes.addAll(opponentGroup);
+                }
+            }
+        }
+        return capturedHexes; // Return all captured hexes
+    }
+
+    private void captureHexagons(Set<Hexagon> capturedHexes) {
+        for (Hexagon hex : capturedHexes) {
+            hex.setOwner(null);  // Remove owner
+            hex.getHexShape().setFill(hexNavy);  // Reset color to default
+        }
     }
 
 
