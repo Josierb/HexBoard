@@ -2050,6 +2050,16 @@
                </font>
             </Label>
             <Button fx:id="quitbutton" layoutX="829.0" layoutY="610.0" mnemonicParsing="false" onMouseClicked="#quit" prefHeight="26.0" prefWidth="65.0" text="Quit" />
+            <Label fx:id="bluecount" layoutX="28.0" layoutY="44.0" text="Blue Count: 0">
+               <font>
+                  <Font name="Impact" size="28.0" />
+               </font>
+            </Label>
+            <Label fx:id="orangecount" layoutX="28.0" layoutY="82.0" text="Orange Count: 0">
+               <font>
+                  <Font name="Impact" size="28.0" />
+               </font>
+            </Label>
           </children>
       </AnchorPane>
    </children>

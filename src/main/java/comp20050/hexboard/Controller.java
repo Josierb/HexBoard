@@ -32,9 +32,20 @@ public class Controller {
     Color tronBlue = Color.web("#08F7FE"); // Tron Neon Blue
     Color tronOrange = Color.web("#FF8000"); // Tron Neon Orange
 
+    private int blueCount = 0;
+    private int orangeCount = 0;
+
     //Set up Label for displaying who's turn it is
     @FXML
     private Label turnlabel;
+
+    @FXML
+    private Label bluecount;
+
+    @FXML
+    private Label orangecount;
+
+
 
     //Method for associating the polygon and hexagon object
     @FXML
@@ -85,6 +96,13 @@ public class Controller {
             hexagon.setFill(currentColor);
             clickedHex.setOwner(currentColor);
 
+            if(isBlueTurn) {
+                blueCount++;
+            }
+            else{
+                orangeCount++;
+            }
+
             //Set for hexagons that would be captured by this move
             Set<Hexagon> capturedHexes = getCapturedHexes(clickedHex);
 
@@ -102,6 +120,8 @@ public class Controller {
             // Update turn label
             turnlabel.setText(isBlueTurn ? "Blue's Turn" : "Orange's Turn");
             turnlabel.setTextFill(isBlueTurn ? tronBlue : tronOrange);
+            bluecount.setText("Blue Count: " + blueCount);
+            orangecount.setText("Orange Count: " + orangeCount);
 
             // Play sound effect
             stonePlacement.play();
@@ -273,9 +293,16 @@ public class Controller {
 
 
     private void captureHexagons(Set<Hexagon> capturedHexes) {
-        for (Hexagon hex : capturedHexes) {
-            hex.setOwner(null);  // Remove owner
-            hex.getHexShape().setFill(hexNavy);  // Reset color to default
+
+            for (Hexagon hex : capturedHexes) {
+                hex.setOwner(null);  // Remove owner
+                hex.getHexShape().setFill(hexNavy);  // Reset color to default
+                if(isBlueTurn){
+                    orangeCount--;
+                }
+                else{
+                    blueCount--;
+                }
         }
     }
 
