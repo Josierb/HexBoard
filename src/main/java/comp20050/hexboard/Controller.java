@@ -154,9 +154,9 @@ public class Controller {
         }
 
         // Allow placement if it's next to an opponent
-        if (adjacentToOpponent) {
+        /*if (adjacentToOpponent) {
             return true;
-        }
+        }*/
 
         // Block placement if it's next to a tile of an opponent colour
         if (adjacentToSameColor) {
@@ -197,9 +197,8 @@ public class Controller {
 
         int totalPlayerGroupSize = totalPlayerGroup.size();
 
-        // Find the smallest opponent group adjacent to any part of the merged group
-        // This is important as it decides which opponent group to get rid of
-        int smallestOpponentGroup = Integer.MAX_VALUE;
+        //Finding the largest opponent group that will be present after a move it made
+        int largestOpponentGroup = 0;
         //Go through every hexagon
         for (Hexagon hex : totalPlayerGroup) {
             //go through each of the hexagons neighbours
@@ -207,13 +206,15 @@ public class Controller {
                 if (neighbor.getOwner() != null && neighbor.getOwner().equals(opponentColor)) {
                     Set<Hexagon> opponentGroup = new HashSet<>();
                     int oppGroupSize = findConnectedGroupSize(neighbor, opponentColor, opponentGroup);
-                    smallestOpponentGroup = Math.min(smallestOpponentGroup, oppGroupSize);
+                    largestOpponentGroup = Math.max(largestOpponentGroup, oppGroupSize);
                 }
             }
         }
 
-        //Capture occurs if the combined blue group is larger than the smallest opponent group
-        return (totalPlayerGroupSize > smallestOpponentGroup);
+
+
+        //Capture occurs if the combined blue group is larger than the largest opponent group
+        return ((totalPlayerGroupSize > largestOpponentGroup) && (largestOpponentGroup != 0));
     }
 
 
