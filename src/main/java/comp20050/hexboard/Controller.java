@@ -49,7 +49,7 @@ public class Controller {
 
     //Method for associating the polygon and hexagon object
     @FXML
-    void getHexID(MouseEvent event) {
+    private void getHexID(MouseEvent event) {
         Polygon hexagon = (Polygon) event.getSource();
         Hexagon clickedHex = hexGrid.getHexByShape(hexagon);
 
@@ -65,7 +65,7 @@ public class Controller {
 
     //Method for features called when hexagon is hovered on
     @FXML
-    void onHexHover(MouseEvent event) {
+    private void onHexHover(MouseEvent event) {
 
         Polygon hexagon = (Polygon) event.getSource();
         Hexagon hoveredHex = hexGrid.getHexByShape(hexagon); // Get the Hexagon object
@@ -315,13 +315,13 @@ public class Controller {
 
     // Method for quitting game when quitbutton is clicked
     @FXML
-    void quit(MouseEvent event) {
+    private void quit(MouseEvent event) {
         Platform.exit();
         System.exit(0);
     }
 
     @FXML
-    void exitHexHover(MouseEvent event) {
+    private void exitHexHover(MouseEvent event) {
         Polygon hexagon = (Polygon) event.getSource();
         if (hexagon.getFill().equals(Color.DARKMAGENTA)) {
             hexagon.setFill(hexNavy);
