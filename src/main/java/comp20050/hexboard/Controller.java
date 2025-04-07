@@ -34,6 +34,7 @@ public class Controller {
 
     private int blueCount = 0;
     private int orangeCount = 0;
+    private int roundCount = 0;
 
     //Set up Label for displaying who's turn it is
     @FXML
@@ -101,6 +102,7 @@ public class Controller {
             }
             else{
                 orangeCount++;
+                roundCount++;
             }
 
             //Set for hexagons that would be captured by this move
@@ -125,8 +127,44 @@ public class Controller {
 
             // Play sound effect
             stonePlacement.play();
+
+            //Clause for winning
+            if ((orangeCount == 0 || blueCount == 0) && roundCount > 0) {
+                String winner = (blueCount > 0) ? "Blue" : "Orange";
+                int stonesLeft = (blueCount > 0) ? blueCount : orangeCount;
+                showWinnerPopup(winner, stonesLeft, roundCount);
+            }
+
         }
     }
+
+    private void showWinnerPopup(String winner, int stonesLeft, int roundsPlayed) {
+        Platform.runLater(() -> {
+            javafx.scene.control.Alert alert = new  javafx.scene.control.Alert( javafx.scene.control.Alert.AlertType.INFORMATION);
+            alert.setTitle("🏁 Game Over");
+            alert.setHeaderText(null);
+
+            // Custom styled content
+            Label content = new Label(
+                    String.format("🎉 %s wins the game!\n\n🪨 Stones Left: %d\n🔁 Rounds Played: %d",
+                            winner, stonesLeft, roundsPlayed)
+            );
+            content.setStyle("-fx-font-size: 16px; -fx-padding: 10px;");
+
+            alert.getDialogPane().setContent(content);
+
+            // Optional: custom styling for dialog pane
+            alert.getDialogPane().setStyle("-fx-background-color: #202020; -fx-border-color: #08F7FE; -fx-border-width: 2px;");
+            alert.getDialogPane().lookup(".content.label").setStyle("-fx-text-fill: white;");
+
+            // Set Tron-style button colors (optional)
+            Button okButton = (Button) alert.getDialogPane().lookupButton( javafx.scene.control.ButtonType.OK);
+            okButton.setStyle("-fx-background-color: #08F7FE; -fx-text-fill: #010437; -fx-font-weight: bold;");
+
+            alert.show();
+        });
+    }
+
 
     boolean isValidMove(Polygon hexagon, Hexagon hoveredHex, Color currentColor) {
 
