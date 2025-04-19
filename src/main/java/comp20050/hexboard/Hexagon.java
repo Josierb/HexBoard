@@ -12,6 +12,9 @@ public class Hexagon {
     private Map<String, Hexagon> neighbors; // Stores references to neighbor hexes
 
     public Hexagon(int q, int r, int s, Polygon shape) {
+        if (shape == null) {
+            throw new IllegalArgumentException("Hexagon shape cannot be null");
+        }
         this.q = q;
         this.r = r;
         this.s = s;

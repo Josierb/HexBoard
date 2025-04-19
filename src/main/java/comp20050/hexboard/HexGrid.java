@@ -9,11 +9,17 @@ public class HexGrid {
     private Map<String, Hexagon> hexMap = new HashMap<>(); // Stores hexagons by "x,y,z" keys
 
     public void addHex(Hexagon hex) {
+        if (hex == null) {
+            throw new NullPointerException("hex is null");
+        }
         String key = hex.getX() + "," + hex.getY() + "," + hex.getZ();
         hexMap.put(key, hex);
     }
 
     public Hexagon getHex(int x, int y, int z) {
+        if (x > 6 || x < -6 || y > 6 || y < -6 || z > 6 || z < -6) {
+            return null;
+        }
         String key = x + "," + y + "," + z;
         return hexMap.getOrDefault(key, null);
     }
@@ -32,6 +38,10 @@ public class HexGrid {
 
 
         return false;
+    }
+
+    public int getHexCount() {
+        return hexMap.size();
     }
 
     public void linkNeighbors() {
