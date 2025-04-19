@@ -29,6 +29,15 @@ Polygon{
             dropshadow(gaussian, #0ff, 10, 3, 0, 0); /* Neon Glow */
 }
 
+#roundcount {
+    -fx-text-fill: #ff00ff; /* Neon Cyan */
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-effect:
+            dropshadow(gaussian, black, 2, 8, 0, 0), /* Black Outline */
+            dropshadow(gaussian, #0ff, 10, 3, 0, 0); /* Neon Glow */
+}
+
 #quitbutton {
     -fx-background-color: #ff00ff; /* Pink background */
     -fx-text-fill: #0ff; /* White text */

@@ -6,8 +6,10 @@ import java.util.*;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
@@ -56,6 +58,9 @@ public class Controller {
 
     @FXML
     private Label orangecount;
+
+    @FXML
+    private Label roundcount;
 
 
 
@@ -113,7 +118,6 @@ public class Controller {
             }
             else{
                 orangeCount++;
-                roundCount++;
             }
 
             //Set for hexagons that would be captured by this move
@@ -127,6 +131,9 @@ public class Controller {
 
             // Only switch turns if no capture move was made
             if (!isCapture) {
+                if(!isBlueTurn) {
+                    roundCount++;
+                }
                 isBlueTurn = !isBlueTurn;
             }
 
@@ -135,6 +142,7 @@ public class Controller {
             turnlabel.setTextFill(isBlueTurn ? tronBlue : tronOrange);
             bluecount.setText("Blue Count: " + blueCount);
             orangecount.setText("Orange Count: " + orangeCount);
+            roundcount.setText("Round - " + roundCount);
 
             // Play sound effect
             stonePlacement.play();
@@ -177,19 +185,54 @@ public class Controller {
             message.setWrapText(true);
             message.setAlignment(Pos.CENTER);
 
-            Button closeButton = new Button("Return to Game");
-            closeButton.setStyle("-fx-background-color: " + buttonBackgroundColor + "; " +
-                    "-fx-text-fill: #010437; " +
-                    "-fx-font-weight: bold; " +
-                    "-fx-font-size: 14px; " +
-                    "-fx-background-radius: 8px;");
-            closeButton.setOnAction(e -> HexOustApplication.root.getChildren().remove(overlay));
+            Button closeButton = new Button("Restart Game");
 
-            popup.getChildren().addAll(message, closeButton);
+            closeButton.setScaleX(1.2);
+            closeButton.setScaleY(1.2);
+            closeButton.setStyle("-fx-background-color: #ff00ff;" +
+                    "-fx-cursor: hand;" +
+            "-fx-text-fill: #0ff; " +
+            "-fx-font-size: 11px; " +
+            "-fx-font-weight: bold;" +
+            "-fx-padding: 10px 20px;" +
+            "-fx-border-radius: 25px; " +
+            "-fx-effect:" +
+            "dropshadow(gaussian, black, 2, 8, 0, 0)" +
+                    "dropshadow(gaussian, #0ff, 10, 3, 0, 0);" );
+
+            // Make it expand when hovered
+            closeButton.setOnMouseEntered(e -> {
+                closeButton.setScaleX(1.3);
+                closeButton.setScaleY(1.3);
+            });
+
+            closeButton.setOnMouseExited(e -> {
+                closeButton.setScaleX(1.2);
+                closeButton.setScaleY(1.2);
+            });
+            closeButton.setOnAction(e -> {HexOustApplication.root.getChildren().remove(overlay);
+                try {
+                    restart();
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
+
+            popup.getChildren().addAll(message, closeButton, quitbutton);
             overlay.getChildren().add(popup);
 
             HexOustApplication.root.getChildren().add(overlay);
         });
+    }
+
+    public void restart() throws Exception {
+        Parent loadedRoot = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
+
+        HexOustApplication.root.getChildren().clear();         // clear old stuff
+        HexOustApplication.root.getChildren().add(loadedRoot); // load new UI
+
+        // You can also reapply styles if needed
+        HexOustApplication.root.getScene().getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
     }
 
 

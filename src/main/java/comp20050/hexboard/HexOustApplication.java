@@ -27,6 +27,8 @@ public class HexOustApplication extends Application {
         scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
     }
 
+
+
     public static void main(String[] args) {
         launch(args);
     }
