@@ -2,16 +2,27 @@ package comp20050.hexboard;
 
 import java.net.URL;
 import java.util.*;
+
+import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.control.Label;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class Controller {
 
@@ -140,30 +151,48 @@ public class Controller {
 
     private void showWinnerPopup(String winner, int stonesLeft, int roundsPlayed) {
         Platform.runLater(() -> {
-            javafx.scene.control.Alert alert = new  javafx.scene.control.Alert( javafx.scene.control.Alert.AlertType.INFORMATION);
-            alert.setTitle("🏁 Game Over");
-            alert.setHeaderText(null);
+            StackPane overlay = new StackPane();
+            overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.85);"); // Slightly darker transparent overlay
+            overlay.setPrefSize(HexOustApplication.root.getWidth(), HexOustApplication.root.getHeight());
+            overlay.setAlignment(Pos.CENTER);
 
-            // Custom styled content
-            Label content = new Label(
-                    String.format("🎉 %s wins the game!\n\n🪨 Stones Left: %d\n🔁 Rounds Played: %d",
-                            winner, stonesLeft, roundsPlayed)
-            );
-            content.setStyle("-fx-font-size: 16px; -fx-padding: 10px;");
+            // Set the popup background color based on the winner
+            String popupBackgroundColor = winner.equals("Blue") ? "#0084FF" : "#FFA500"; // Blue for Blue, Orange for Orange
+            String buttonBackgroundColor = winner.equals("Blue") ? "#0084FF" : "#FFA500"; // Same for button
 
-            alert.getDialogPane().setContent(content);
+            VBox popup = new VBox(20);
+            popup.setStyle("-fx-background-color: " + popupBackgroundColor + ";" +
+                    "-fx-border-color: #08F7FE;" +
+                    "-fx-border-width: 3px;" +
+                    "-fx-background-radius: 15px;" +
+                    "-fx-border-radius: 15px;" +
+                    "-fx-padding: 30px;");
+            popup.setAlignment(Pos.CENTER);
 
-            // Optional: custom styling for dialog pane
-            alert.getDialogPane().setStyle("-fx-background-color: #202020; -fx-border-color: #08F7FE; -fx-border-width: 2px;");
-            alert.getDialogPane().lookup(".content.label").setStyle("-fx-text-fill: white;");
+            Label message = new Label(String.format(
+                    "🎉 %s wins the game!\n\n🪨 Stones Left: %d\n🔁 Rounds Played: %d",
+                    winner, stonesLeft, roundsPlayed
+            ));
+            message.setStyle("-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;");
+            message.setWrapText(true);
+            message.setAlignment(Pos.CENTER);
 
-            // Set Tron-style button colors (optional)
-            Button okButton = (Button) alert.getDialogPane().lookupButton( javafx.scene.control.ButtonType.OK);
-            okButton.setStyle("-fx-background-color: #08F7FE; -fx-text-fill: #010437; -fx-font-weight: bold;");
+            Button closeButton = new Button("Return to Game");
+            closeButton.setStyle("-fx-background-color: " + buttonBackgroundColor + "; " +
+                    "-fx-text-fill: #010437; " +
+                    "-fx-font-weight: bold; " +
+                    "-fx-font-size: 14px; " +
+                    "-fx-background-radius: 8px;");
+            closeButton.setOnAction(e -> HexOustApplication.root.getChildren().remove(overlay));
 
-            alert.show();
+            popup.getChildren().addAll(message, closeButton);
+            overlay.getChildren().add(popup);
+
+            HexOustApplication.root.getChildren().add(overlay);
         });
     }
+
+
 
 
     boolean isValidMove(Polygon hexagon, Hexagon hoveredHex, Color currentColor) {
