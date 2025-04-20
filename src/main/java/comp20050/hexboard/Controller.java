@@ -226,14 +226,27 @@ public class Controller {
     }
 
     public void restart() throws Exception {
+        // Stop the old background music if it’s playing
+        if (bgMusicPlayer != null) {
+            bgMusicPlayer.stop();
+        }
+
+        // Reload the UI
         Parent loadedRoot = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
+        HexOustApplication.root.getChildren().clear();
+        HexOustApplication.root.getChildren().add(loadedRoot);
 
-        HexOustApplication.root.getChildren().clear();         // clear old stuff
-        HexOustApplication.root.getChildren().add(loadedRoot); // load new UI
-
-        // You can also reapply styles if needed
+        // Reapply styles
         HexOustApplication.root.getScene().getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+
+        // Restart the background music
+        Media bgMusic = new Media(getClass().getResource("/sounds/background_music.mp3").toExternalForm());
+        bgMusicPlayer = new MediaPlayer(bgMusic);
+        bgMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        bgMusicPlayer.setVolume(0.5);
+        bgMusicPlayer.play();
     }
+
 
 
 
