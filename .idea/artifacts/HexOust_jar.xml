@@ -3,19 +3,19 @@
     <output-path>$PROJECT_DIR$/out/artifacts/HexOust_jar</output-path>
     <root id="archive" name="HexOust.jar">
       <element id="module-output" name="HexOust" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-base/22.0.1/javafx-base-22.0.1.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/kordamp/bootstrapfx/bootstrapfx-core/0.4.0/bootstrapfx-core-0.4.0.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-fxml/22.0.1/javafx-fxml-22.0.1-win.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/dlsc/formsfx/formsfx-core/11.6.0/formsfx-core-11.6.0.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-controls/22.0.1/javafx-controls-22.0.1.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/22.0.1/javafx-graphics-22.0.1-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-base/22.0.1/javafx-base-22.0.1-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-fxml/22.0.1/javafx-fxml-22.0.1-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/controlsfx/controlsfx/11.2.1/controlsfx-11.2.1.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-media/23.0.1/javafx-media-23.0.1-win.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-controls/22.0.1/javafx-controls-22.0.1-win.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/22.0.1/javafx-graphics-22.0.1.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-base/22.0.1/javafx-base-22.0.1-win.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-media/23.0.1/javafx-media-23.0.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-base/22.0.1/javafx-base-22.0.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/kordamp/bootstrapfx/bootstrapfx-core/0.4.0/bootstrapfx-core-0.4.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-controls/22.0.1/javafx-controls-22.0.1.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-fxml/22.0.1/javafx-fxml-22.0.1.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/controlsfx/controlsfx/11.2.1/controlsfx-11.2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/22.0.1/javafx-graphics-22.0.1-win.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>
