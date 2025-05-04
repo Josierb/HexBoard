@@ -17,6 +17,9 @@ import javafx.scene.control.Label;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
 
 /**
  * Controller for the HexOust game board.
@@ -299,7 +302,15 @@ public class Controller {
             popup.getChildren().addAll(message, closeButton, quitbutton);
             overlay.getChildren().add(popup);
 
+            // Set initial opacity and add to root
+            overlay.setOpacity(0);
             HexOustApplication.root.getChildren().add(overlay);
+
+            // Fade-in animation
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(500), overlay);
+            fadeIn.setFromValue(0);
+            fadeIn.setToValue(1);
+            fadeIn.play();
         });
     }
 
