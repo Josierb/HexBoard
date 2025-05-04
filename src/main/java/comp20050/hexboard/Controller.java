@@ -165,19 +165,26 @@ public class Controller {
     }
 
     /**
+     * Builds the full connected group of a player's stones including the clicked hex.
+     */
+    private Set<Hexagon> buildConnectedPlayerGroup(Hexagon clickedHex, Color currentColor) {
+        Set<Hexagon> group = new HashSet<>();
+        for (Hexagon neighbor : clickedHex.getNeighbors().values()) {
+            if (neighbor.getOwner() != null && neighbor.getOwner().equals(currentColor)) {
+                findConnectedGroupSize(neighbor, currentColor, group);
+            }
+        }
+        group.add(clickedHex);
+        return group;
+    }
+
+
+    /**
      * Determines whether a move would result in a capture.
      */
     private boolean isCaptureMove(Hexagon clickedHex, Color currentColor) {
         Color opponentColor = currentColor.equals(COLOR_BLUE) ? COLOR_ORANGE : COLOR_BLUE;
-        Set<Hexagon> totalPlayerGroup = new HashSet<>();
-
-        for (Hexagon neighbor : clickedHex.getNeighbors().values()) {
-            if (neighbor.getOwner() != null && neighbor.getOwner().equals(currentColor)) {
-                findConnectedGroupSize(neighbor, currentColor, totalPlayerGroup);
-            }
-        }
-
-        totalPlayerGroup.add(clickedHex);
+        Set<Hexagon> totalPlayerGroup = buildConnectedPlayerGroup(clickedHex, currentColor);
         int totalPlayerGroupSize = totalPlayerGroup.size();
 
         int largestOpponentGroup = 0;
@@ -227,14 +234,7 @@ public class Controller {
         Color currentColor = clickedHex.getOwner();
         Color opponentColor = currentColor.equals(COLOR_BLUE) ? COLOR_ORANGE : COLOR_BLUE;
 
-        Set<Hexagon> totalPlayerGroup = new HashSet<>();
-        for (Hexagon neighbor : clickedHex.getNeighbors().values()) {
-            if (neighbor.getOwner() != null && neighbor.getOwner().equals(currentColor)) {
-                findConnectedGroupSize(neighbor, currentColor, totalPlayerGroup);
-            }
-        }
-
-        totalPlayerGroup.add(clickedHex);
+        Set<Hexagon> totalPlayerGroup = buildConnectedPlayerGroup(clickedHex, currentColor);
         int totalPlayerGroupSize = totalPlayerGroup.size();
         Set<Hexagon> capturedHexes = new HashSet<>();
 
