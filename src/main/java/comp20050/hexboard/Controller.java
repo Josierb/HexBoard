@@ -54,7 +54,7 @@ public class Controller {
      * Handles a user clicking on a hexagon. Finds the associated Hexagon and processes the move.
      */
     @FXML
-    private void getHexID(MouseEvent event) {
+    private void onHexClick(MouseEvent event) {
         Polygon hexagon = (Polygon) event.getSource();
         Hexagon clickedHex = hexGrid.getHexByShape(hexagon);
 
