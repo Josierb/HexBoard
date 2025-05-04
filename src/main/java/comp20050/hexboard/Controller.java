@@ -294,35 +294,7 @@ public class Controller {
             message.setWrapText(true);
             message.setAlignment(Pos.CENTER);
 
-            Button closeButton = new Button("Restart Game");
-            closeButton.setStyle("-fx-background-color: #ff00ff;" +
-                    "-fx-text-fill: #0ff; " +
-                    "-fx-font-size: 11px; " +
-                    "-fx-font-weight: bold;" +
-                    "-fx-padding: 10px 20px;" +
-                    "-fx-border-radius: 25px; " +
-                    "-fx-cursor: hand;" +
-                    "-fx-effect: dropshadow(gaussian, black, 2, 8, 0, 0) " +
-                    "dropshadow(gaussian, #0ff, 10, 3, 0, 0);");
-            closeButton.setScaleX(1.2);
-            closeButton.setScaleY(1.2);
-
-            closeButton.setOnMouseEntered(e -> {
-                closeButton.setScaleX(1.3);
-                closeButton.setScaleY(1.3);
-            });
-            closeButton.setOnMouseExited(e -> {
-                closeButton.setScaleX(1.2);
-                closeButton.setScaleY(1.2);
-            });
-            closeButton.setOnAction(e -> {
-                HexOustApplication.root.getChildren().remove(overlay);
-                try {
-                    restart();
-                } catch (Exception ex) {
-                    throw new RuntimeException(ex);
-                }
-            });
+            Button closeButton = getCloseButton(overlay);
 
             popup.getChildren().addAll(message, closeButton, quitbutton);
             overlay.getChildren().add(popup);
@@ -331,18 +303,51 @@ public class Controller {
         });
     }
 
+    private Button getCloseButton(StackPane overlay) {
+        Button closeButton = new Button("Restart Game");
+        closeButton.setStyle("-fx-background-color: #ff00ff;" +
+                "-fx-text-fill: #0ff; " +
+                "-fx-font-size: 11px; " +
+                "-fx-font-weight: bold;" +
+                "-fx-padding: 10px 20px;" +
+                "-fx-border-radius: 25px; " +
+                "-fx-cursor: hand;" +
+                "-fx-effect: dropshadow(gaussian, black, 2, 8, 0, 0) " +
+                "dropshadow(gaussian, #0ff, 10, 3, 0, 0);");
+        closeButton.setScaleX(1.2);
+        closeButton.setScaleY(1.2);
+
+        closeButton.setOnMouseEntered(e -> {
+            closeButton.setScaleX(1.3);
+            closeButton.setScaleY(1.3);
+        });
+        closeButton.setOnMouseExited(e -> {
+            closeButton.setScaleX(1.2);
+            closeButton.setScaleY(1.2);
+        });
+        closeButton.setOnAction(e -> {
+            HexOustApplication.root.getChildren().remove(overlay);
+            try {
+                restart();
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        return closeButton;
+    }
+
     /**
      * Restarts the game: reloads the FXML layout and restarts the background music.
      */
     public void restart() throws Exception {
         if (bgMusicPlayer != null) bgMusicPlayer.stop();
 
-        Parent loadedRoot = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
+        Parent loadedRoot = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("hello-view.fxml")));
         HexOustApplication.root.getChildren().clear();
         HexOustApplication.root.getChildren().add(loadedRoot);
-        HexOustApplication.root.getScene().getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+        HexOustApplication.root.getScene().getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
 
-        Media bgMusic = new Media(getClass().getResource("/sounds/background_music.mp3").toExternalForm());
+        Media bgMusic = new Media(Objects.requireNonNull(getClass().getResource("/sounds/background_music.mp3")).toExternalForm());
         bgMusicPlayer = new MediaPlayer(bgMusic);
         bgMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         bgMusicPlayer.setVolume(0.5);
@@ -784,8 +789,8 @@ public class Controller {
     void initialize() {
         setupHexGrid();
 
-        stonePlacement = new AudioClip(getClass().getResource("/sounds/stone_place.mp3").toExternalForm());
-        Media bgMusic = new Media(getClass().getResource("/sounds/background_music.mp3").toExternalForm());
+        stonePlacement = new AudioClip(Objects.requireNonNull(getClass().getResource("/sounds/stone_place.mp3")).toExternalForm());
+        Media bgMusic = new Media(Objects.requireNonNull(getClass().getResource("/sounds/background_music.mp3")).toExternalForm());
         bgMusicPlayer = new MediaPlayer(bgMusic);
         bgMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         bgMusicPlayer.setVolume(0.5);
