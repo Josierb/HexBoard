@@ -2,7 +2,6 @@ package comp20050.hexboard;
 
 import java.net.URL;
 import java.util.*;
-
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -21,50 +20,39 @@ import javafx.scene.control.Label;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.shape.Rectangle;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+/**
+ * Controller for the HexOust game board.
+ * Manages user interaction, game logic, UI updates, and win condition checks.
+ */
 public class Controller {
 
-    //Set up Grid for storing Hexagon objects
     private HexGrid hexGrid = new HexGrid();
-    //Set up Map for linking the FXML Polygons to Hexagon objects
     private Map<Polygon, Hexagon> polygonToHexMap = new HashMap<>();
-
-    //Boolean for tracking which players turn it is
     private boolean isBlueTurn = true;
 
-    //Set up for audio used
     private AudioClip stonePlacement;
     private MediaPlayer bgMusicPlayer;
 
-    //Set up colours used
-    Color hexNavy = Color.web("#010437");
-    Color tronBlue = Color.web("#08F7FE"); // Tron Neon Blue
-    Color tronOrange = Color.web("#FF8000"); // Tron Neon Orange
+    private static final Color HEX_NAVY = Color.web("#010437");
+    private static final Color COLOR_BLUE = Color.web("#08F7FE");
+    private static final Color COLOR_ORANGE = Color.web("#FF8000");
 
     private int blueCount = 0;
     private int orangeCount = 0;
     private int roundCount = 0;
 
-    //Set up Label for displaying who's turn it is
-    @FXML
-    private Label turnlabel;
+    @FXML private Label turnlabel;
+    @FXML private Label bluecount;
+    @FXML private Label orangecount;
+    @FXML private Label roundcount;
+    @FXML private Button quitbutton;
 
-    @FXML
-    private Label bluecount;
-
-    @FXML
-    private Label orangecount;
-
-    @FXML
-    private Label roundcount;
-
-
-
-    //Method for associating the polygon and hexagon object
+    /**
+     * Handles a user clicking on a hexagon. Finds the associated Hexagon and processes the move.
+     */
     @FXML
     private void getHexID(MouseEvent event) {
         Polygon hexagon = (Polygon) event.getSource();
@@ -75,101 +63,227 @@ public class Controller {
             return;
         }
 
-        //Call makeMove method with associated Hexagon and Polygon
-        makeMove(clickedHex, hexagon);
+        handlePlayerMove(clickedHex, hexagon);
     }
 
-
-    //Method for features called when hexagon is hovered on
+    /**
+     * Handles hover effects for valid moves.
+     */
     @FXML
     private void onHexHover(MouseEvent event) {
-
         Polygon hexagon = (Polygon) event.getSource();
-        Hexagon hoveredHex = hexGrid.getHexByShape(hexagon); // Get the Hexagon object
+        Hexagon hoveredHex = hexGrid.getHexByShape(hexagon);
 
-        if (hoveredHex == null) {
-            System.out.println("Hovered hex not found!");
-            return;
-        }
+        if (hoveredHex == null) return;
 
-        Color currentColor = isBlueTurn ? tronBlue : tronOrange;
-
-        if(isValidMove(hexagon, hoveredHex, currentColor)) {
-            // Change color when hovered
-            if (hexagon.getFill().equals(hexNavy)) {
+        Color currentColor = isBlueTurn ? COLOR_BLUE : COLOR_ORANGE;
+        if (isValidMove(hexagon, hoveredHex, currentColor)) {
+            if (hexagon.getFill().equals(HEX_NAVY)) {
                 hexagon.setFill(Color.DARKMAGENTA);
             }
         }
-
     }
 
-    private void makeMove(Hexagon clickedHex, Polygon hexagon) {
-        // Determine the current player's color
-        Color currentColor = isBlueTurn ? tronBlue : tronOrange;
-        //Color opponentColor = (currentColor.equals(tronBlue)) ? tronOrange : tronBlue;
+    /**
+     * Removes hover highlight from hexagon.
+     */
+    @FXML
+    private void exitHexHover(MouseEvent event) {
+        Polygon hexagon = (Polygon) event.getSource();
+        if (hexagon.getFill().equals(Color.DARKMAGENTA)) {
+            hexagon.setFill(HEX_NAVY);
+        }
+    }
 
-        // If the hexagon is unclaimed, allow the move
+    /**
+     * Exits the application.
+     */
+    @FXML
+    private void quit(MouseEvent event) {
+        Platform.exit();
+        System.exit(0);
+    }
+
+    /**
+     * Places a stone, updates UI, checks capture logic, and toggles player turn.
+     */
+    private void handlePlayerMove(Hexagon clickedHex, Polygon hexagon) {
+        Color currentColor = isBlueTurn ? COLOR_BLUE : COLOR_ORANGE;
+
         if (hexagon.getFill().equals(Color.DARKMAGENTA)) {
             hexagon.setFill(currentColor);
             clickedHex.setOwner(currentColor);
 
-            if(isBlueTurn) {
-                blueCount++;
-            }
-            else{
-                orangeCount++;
-            }
+            if (isBlueTurn) blueCount++; else orangeCount++;
 
-            //Set for hexagons that would be captured by this move
             Set<Hexagon> capturedHexes = getCapturedHexes(clickedHex);
-
             boolean isCapture = isCaptureMove(clickedHex, currentColor);
-            //If there are hexagons that would be captured by this, capture them
+
             if (isCapture) {
                 captureHexagons(capturedHexes);
             }
 
-            // Only switch turns if no capture move was made
             if (!isCapture) {
-                if(!isBlueTurn) {
-                    roundCount++;
-                }
+                if (!isBlueTurn) roundCount++;
                 isBlueTurn = !isBlueTurn;
             }
 
-            // Update turn label
-            turnlabel.setText(isBlueTurn ? "Blue's Turn" : "Orange's Turn");
-            turnlabel.setTextFill(isBlueTurn ? tronBlue : tronOrange);
-            bluecount.setText("Blue Count: " + blueCount);
-            orangecount.setText("Orange Count: " + orangeCount);
-            roundcount.setText("Round - " + roundCount);
-
-            // Play sound effect
+            updateUI();
             stonePlacement.play();
 
-            //Clause for winning
+            // Check win condition
             if ((orangeCount == 0 || blueCount == 0) && roundCount > 0) {
                 String winner = (blueCount > 0) ? "Blue" : "Orange";
                 int stonesLeft = (blueCount > 0) ? blueCount : orangeCount;
                 showWinnerPopup(winner, stonesLeft, roundCount);
             }
-
         }
     }
 
+    /**
+     * Updates the turn label, round counter, and stone counts on the UI.
+     */
+    private void updateUI() {
+        turnlabel.setText(isBlueTurn ? "Blue's Turn" : "Orange's Turn");
+        turnlabel.setTextFill(isBlueTurn ? COLOR_BLUE : COLOR_ORANGE);
+        bluecount.setText("Blue Count: " + blueCount);
+        orangecount.setText("Orange Count: " + orangeCount);
+        roundcount.setText("Round - " + roundCount);
+    }
+
+    /**
+     * Validates if a move is allowed (no adjacent same color OR a capture move).
+     */
+    private boolean isValidMove(Polygon hexagon, Hexagon hoveredHex, Color currentColor) {
+        boolean isCapturing = isCaptureMove(hoveredHex, currentColor);
+        List<Hexagon> neighbors = getHexNeighbors(hoveredHex);
+        boolean adjacentToSameColor = false;
+
+        for (Hexagon neighbor : neighbors) {
+            if (neighbor.getOwner() != null && neighbor.getOwner().equals(currentColor)) {
+                adjacentToSameColor = true;
+                break;
+            }
+        }
+
+        return isCapturing || !adjacentToSameColor;
+    }
+
+    /**
+     * Determines whether a move would result in a capture.
+     */
+    private boolean isCaptureMove(Hexagon clickedHex, Color currentColor) {
+        Color opponentColor = currentColor.equals(COLOR_BLUE) ? COLOR_ORANGE : COLOR_BLUE;
+        Set<Hexagon> totalPlayerGroup = new HashSet<>();
+
+        for (Hexagon neighbor : clickedHex.getNeighbors().values()) {
+            if (neighbor.getOwner() != null && neighbor.getOwner().equals(currentColor)) {
+                findConnectedGroupSize(neighbor, currentColor, totalPlayerGroup);
+            }
+        }
+
+        totalPlayerGroup.add(clickedHex);
+        int totalPlayerGroupSize = totalPlayerGroup.size();
+
+        int largestOpponentGroup = 0;
+        for (Hexagon hex : totalPlayerGroup) {
+            for (Hexagon neighbor : hex.getNeighbors().values()) {
+                if (neighbor.getOwner() != null && neighbor.getOwner().equals(opponentColor)) {
+                    Set<Hexagon> opponentGroup = new HashSet<>();
+                    int size = findConnectedGroupSize(neighbor, opponentColor, opponentGroup);
+                    largestOpponentGroup = Math.max(largestOpponentGroup, size);
+                }
+            }
+        }
+
+        return (totalPlayerGroupSize > largestOpponentGroup && largestOpponentGroup != 0);
+    }
+
+    /**
+     * Gets neighboring hexagons of a given hex.
+     */
+    private List<Hexagon> getHexNeighbors(Hexagon hex) {
+        return new ArrayList<>(hex.getNeighbors().values());
+    }
+
+    /**
+     * Recursively computes the size of a group of hexes with the same owner color.
+     */
+    public static int findConnectedGroupSize(Hexagon startHex, Color targetColor, Set<Hexagon> visited) {
+        if (startHex == null || startHex.isEmpty() ||
+                !targetColor.equals(startHex.getOwner()) || visited.contains(startHex)) {
+            return 0;
+        }
+
+        visited.add(startHex);
+        int count = 1;
+
+        for (Hexagon neighbor : startHex.getNeighbors().values()) {
+            count += findConnectedGroupSize(neighbor, targetColor, visited);
+        }
+
+        return count;
+    }
+
+    /**
+     * Identifies which opponent hexes would be captured by placing on the selected hex.
+     */
+    private Set<Hexagon> getCapturedHexes(Hexagon clickedHex) {
+        Color currentColor = clickedHex.getOwner();
+        Color opponentColor = currentColor.equals(COLOR_BLUE) ? COLOR_ORANGE : COLOR_BLUE;
+
+        Set<Hexagon> totalPlayerGroup = new HashSet<>();
+        for (Hexagon neighbor : clickedHex.getNeighbors().values()) {
+            if (neighbor.getOwner() != null && neighbor.getOwner().equals(currentColor)) {
+                findConnectedGroupSize(neighbor, currentColor, totalPlayerGroup);
+            }
+        }
+
+        totalPlayerGroup.add(clickedHex);
+        int totalPlayerGroupSize = totalPlayerGroup.size();
+        Set<Hexagon> capturedHexes = new HashSet<>();
+
+        for (Hexagon hex : totalPlayerGroup) {
+            for (Hexagon neighbor : hex.getNeighbors().values()) {
+                if (neighbor.getOwner() != null && neighbor.getOwner().equals(opponentColor)) {
+                    Set<Hexagon> opponentGroup = new HashSet<>();
+                    int opponentGroupSize = findConnectedGroupSize(neighbor, opponentColor, opponentGroup);
+                    if (totalPlayerGroupSize > opponentGroupSize) {
+                        capturedHexes.addAll(opponentGroup);
+                    }
+                }
+            }
+        }
+
+        return capturedHexes;
+    }
+
+    /**
+     * Resets captured opponent hexes to empty.
+     */
+    private void captureHexagons(Set<Hexagon> capturedHexes) {
+        for (Hexagon hex : capturedHexes) {
+            hex.setOwner(null);
+            hex.getHexShape().setFill(HEX_NAVY);
+            if (isBlueTurn) orangeCount--;
+            else blueCount--;
+        }
+    }
+
+    /**
+     * Displays a styled popup with game results and a restart option.
+     */
     private void showWinnerPopup(String winner, int stonesLeft, int roundsPlayed) {
         Platform.runLater(() -> {
             StackPane overlay = new StackPane();
-            overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.85);"); // Slightly darker transparent overlay
+            overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.85);");
             overlay.setPrefSize(HexOustApplication.root.getWidth(), HexOustApplication.root.getHeight());
             overlay.setAlignment(Pos.CENTER);
 
-            // Set the popup background color based on the winner
-            String popupBackgroundColor = winner.equals("Blue") ? "#0084FF" : "#FFA500"; // Blue for Blue, Orange for Orange
-            String buttonBackgroundColor = winner.equals("Blue") ? "#0084FF" : "#FFA500"; // Same for button
+            String bgColor = winner.equals("Blue") ? "#0084FF" : "#FFA500";
 
             VBox popup = new VBox(20);
-            popup.setStyle("-fx-background-color: " + popupBackgroundColor + ";" +
+            popup.setStyle("-fx-background-color: " + bgColor + ";" +
                     "-fx-border-color: #08F7FE;" +
                     "-fx-border-width: 3px;" +
                     "-fx-background-radius: 15px;" +
@@ -186,31 +300,28 @@ public class Controller {
             message.setAlignment(Pos.CENTER);
 
             Button closeButton = new Button("Restart Game");
-
+            closeButton.setStyle("-fx-background-color: #ff00ff;" +
+                    "-fx-text-fill: #0ff; " +
+                    "-fx-font-size: 11px; " +
+                    "-fx-font-weight: bold;" +
+                    "-fx-padding: 10px 20px;" +
+                    "-fx-border-radius: 25px; " +
+                    "-fx-cursor: hand;" +
+                    "-fx-effect: dropshadow(gaussian, black, 2, 8, 0, 0) " +
+                    "dropshadow(gaussian, #0ff, 10, 3, 0, 0);");
             closeButton.setScaleX(1.2);
             closeButton.setScaleY(1.2);
-            closeButton.setStyle("-fx-background-color: #ff00ff;" +
-                    "-fx-cursor: hand;" +
-            "-fx-text-fill: #0ff; " +
-            "-fx-font-size: 11px; " +
-            "-fx-font-weight: bold;" +
-            "-fx-padding: 10px 20px;" +
-            "-fx-border-radius: 25px; " +
-            "-fx-effect:" +
-            "dropshadow(gaussian, black, 2, 8, 0, 0)" +
-                    "dropshadow(gaussian, #0ff, 10, 3, 0, 0);" );
 
-            // Make it expand when hovered
             closeButton.setOnMouseEntered(e -> {
                 closeButton.setScaleX(1.3);
                 closeButton.setScaleY(1.3);
             });
-
             closeButton.setOnMouseExited(e -> {
                 closeButton.setScaleX(1.2);
                 closeButton.setScaleY(1.2);
             });
-            closeButton.setOnAction(e -> {HexOustApplication.root.getChildren().remove(overlay);
+            closeButton.setOnAction(e -> {
+                HexOustApplication.root.getChildren().remove(overlay);
                 try {
                     restart();
                 } catch (Exception ex) {
@@ -225,232 +336,23 @@ public class Controller {
         });
     }
 
+    /**
+     * Restarts the game: reloads the FXML layout and restarts the background music.
+     */
     public void restart() throws Exception {
-        // Stop the old background music if it’s playing
-        if (bgMusicPlayer != null) {
-            bgMusicPlayer.stop();
-        }
+        if (bgMusicPlayer != null) bgMusicPlayer.stop();
 
-        // Reload the UI
         Parent loadedRoot = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
         HexOustApplication.root.getChildren().clear();
         HexOustApplication.root.getChildren().add(loadedRoot);
-
-        // Reapply styles
         HexOustApplication.root.getScene().getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
 
-        // Restart the background music
         Media bgMusic = new Media(getClass().getResource("/sounds/background_music.mp3").toExternalForm());
         bgMusicPlayer = new MediaPlayer(bgMusic);
         bgMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         bgMusicPlayer.setVolume(0.5);
         bgMusicPlayer.play();
     }
-
-
-
-
-
-    boolean isValidMove(Polygon hexagon, Hexagon hoveredHex, Color currentColor) {
-
-        //boolean for if move is capturing or not
-        boolean isCapturing = isCaptureMove(hoveredHex, currentColor);
-        List<Hexagon> neighbors = getHexNeighbors(hoveredHex);
-        //booleans for if a hexagon is adjacent to one of the same color or not
-        boolean adjacentToSameColor = false;
-        boolean adjacentToOpponent = false;
-
-        //Checks neighbours to see if a tile has adjacent tiles of the same colour or different colour
-        for (Hexagon neighbor : neighbors) {
-            if (neighbor.getOwner() != null) {
-                if (neighbor.getOwner().equals(currentColor)) {
-                    adjacentToSameColor = true;
-                } else {
-                    adjacentToOpponent = true;
-                }
-            }
-        }
-
-        // Allow placement if it's capturing
-        if (isCapturing) {
-            return true;
-        }
-
-        // Allow placement if it's next to an opponent
-        /*if (adjacentToOpponent) {
-            return true;
-        }*/
-
-        // Block placement if it's next to a tile of an opponent colour
-        if (adjacentToSameColor) {
-            return false;
-        }
-
-        // If none of the above, allow the move (i.e., first placement)
-        return true;
-    }
-
-    // Method for creating List of all neighbours of a hexagon
-    private List<Hexagon> getHexNeighbors(Hexagon hex) {
-        // List for storing neighbours
-        List<Hexagon> neighbors = new ArrayList<>();
-        if (hex != null) {
-            // Add all neighbor Hexagon objects from the hex's neighbors map
-            neighbors.addAll(hex.getNeighbors().values());
-        }
-        // Return the list of all neighbours
-        return neighbors;
-    }
-
-    private boolean isCaptureMove(Hexagon clickedHex, Color currentColor) {
-        Color opponentColor = (currentColor.equals(tronBlue)) ? tronOrange : tronBlue;
-
-        // Set to track all hexagons that will be part of the new merged blue group
-        Set<Hexagon> totalPlayerGroup = new HashSet<>();
-
-        // Find all blue hexagons that will be connected by this move
-        for (Hexagon neighbor : clickedHex.getNeighbors().values()) {
-            if (neighbor.getOwner() != null && neighbor.getOwner().equals(currentColor)) {
-                findConnectedGroupSize(neighbor, currentColor, totalPlayerGroup);
-            }
-        }
-
-        // Also add the clicked hex itself
-        totalPlayerGroup.add(clickedHex);
-
-        int totalPlayerGroupSize = totalPlayerGroup.size();
-
-        //Finding the largest opponent group that will be present after a move it made
-        int largestOpponentGroup = 0;
-        //Go through every hexagon
-        for (Hexagon hex : totalPlayerGroup) {
-            //go through each of the hexagons neighbours
-            for (Hexagon neighbor : hex.getNeighbors().values()) {
-                if (neighbor.getOwner() != null && neighbor.getOwner().equals(opponentColor)) {
-                    Set<Hexagon> opponentGroup = new HashSet<>();
-                    int oppGroupSize = findConnectedGroupSize(neighbor, opponentColor, opponentGroup);
-                    largestOpponentGroup = Math.max(largestOpponentGroup, oppGroupSize);
-                }
-            }
-        }
-
-
-
-        //Capture occurs if the combined blue group is larger than the largest opponent group
-        return ((totalPlayerGroupSize > largestOpponentGroup) && (largestOpponentGroup != 0));
-    }
-
-
-
-    /**
-     * Finds all connected hexagons of the same color starting from a given hexagon
-     * @param startHex The hexagon to start checking from
-     * @param targetColor The color to match (should match startHex's color)
-     * @param visited Set to track visited hexagons (pass empty HashSet initially)
-     * @return Set of all connected hexagons with matching color
-     */
-    public static int findConnectedGroupSize(Hexagon startHex, Color targetColor, Set<Hexagon> visited) {
-        // Base cases:
-        // 1. Hex is null
-        // 2. Hex is empty (no owner)
-        // 3. Hex color doesn't match target
-        // 4. Hex already visited
-        if (startHex == null || startHex.isEmpty() ||
-                !targetColor.equals(startHex.getOwner()) ||
-                visited.contains(startHex)) {
-            return 0;
-        }
-
-        // Mark current hex as visited
-        visited.add(startHex);
-        int count = 1;  // Count this hex
-
-        // Recursively count all valid neighbors
-        for (Hexagon neighbor : startHex.getNeighbors().values()) {
-            count += findConnectedGroupSize(neighbor, targetColor, visited);
-        }
-
-        return count;
-    }
-
-
-    private Set<Hexagon> getCapturedHexes(Hexagon clickedHex) {
-        Color currentColor = clickedHex.getOwner();
-        Color opponentColor = (currentColor.equals(tronBlue)) ? tronOrange : tronBlue;
-
-        // Set to track all hexagons that will be part of the new merged blue group
-        Set<Hexagon> totalPlayerGroup = new HashSet<>();
-
-        // Find all blue hexagons that will be connected by this move
-        //Goes though each of the clicked hexagons neighbours and the group size of each neighbour
-        for (Hexagon neighbor : clickedHex.getNeighbors().values()) {
-            if (neighbor.getOwner() != null && neighbor.getOwner().equals(currentColor)) {
-                findConnectedGroupSize(neighbor, currentColor, totalPlayerGroup);
-            }
-        }
-
-        // Also add the clicked hex itself
-        totalPlayerGroup.add(clickedHex);
-
-        int totalPlayerGroupSize = totalPlayerGroup.size();
-        Set<Hexagon> capturedHexes = new HashSet<>();
-
-        // Check all opponent groups adjacent to any hex in the merged blue group
-        for (Hexagon hex : totalPlayerGroup) {
-            for (Hexagon neighbor : hex.getNeighbors().values()) {
-                if (neighbor.getOwner() != null && neighbor.getOwner().equals(opponentColor)) {
-                    Set<Hexagon> opponentGroup = new HashSet<>();
-                    int opponentGroupSize = findConnectedGroupSize(neighbor, opponentColor, opponentGroup);
-
-                    // Capture occurs if the combined blue group is larger than the opponent's group
-                    if (totalPlayerGroupSize > opponentGroupSize) {
-                        capturedHexes.addAll(opponentGroup);
-                    }
-                }
-            }
-        }
-
-        return capturedHexes; // Return all captured hexes
-    }
-
-
-
-
-    private void captureHexagons(Set<Hexagon> capturedHexes) {
-
-            for (Hexagon hex : capturedHexes) {
-                hex.setOwner(null);  // Remove owner
-                hex.getHexShape().setFill(hexNavy);  // Reset color to default
-                if(isBlueTurn){
-                    orangeCount--;
-                }
-                else{
-                    blueCount--;
-                }
-        }
-    }
-
-
-
-    // Button for quitting
-    @FXML
-    private Button quitbutton;
-
-    // Method for quitting game when quitbutton is clicked
-    @FXML
-    private void quit(MouseEvent event) {
-        Platform.exit();
-        System.exit(0);
-    }
-
-    @FXML
-    private void exitHexHover(MouseEvent event) {
-        Polygon hexagon = (Polygon) event.getSource();
-        if (hexagon.getFill().equals(Color.DARKMAGENTA)) {
-            hexagon.setFill(hexNavy);
-        }
-    }
-
 
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
@@ -1248,148 +1150,18 @@ public class Controller {
 
     }
 
-
-    @FXML // This method is called by the FXMLLoader when initialization is complete
+    /**
+     * Initializes the hex grid and background music when the scene loads.
+     */
+    @FXML
     void initialize() {
-
         setupHexGrid();
 
         stonePlacement = new AudioClip(getClass().getResource("/sounds/stone_place.mp3").toExternalForm());
-
         Media bgMusic = new Media(getClass().getResource("/sounds/background_music.mp3").toExternalForm());
-        bgMusicPlayer = new MediaPlayer(bgMusic); // Assign to the class-level variable
-        bgMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop the background music indefinitely
-        bgMusicPlayer.setVolume(0.5);  // Set background music volume to 50%
+        bgMusicPlayer = new MediaPlayer(bgMusic);
+        bgMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        bgMusicPlayer.setVolume(0.5);
         bgMusicPlayer.play();
-
-        assert hex1 != null : "fx:id=\"hex1\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex10 != null : "fx:id=\"hex10\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex100 != null : "fx:id=\"hex100\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex101 != null : "fx:id=\"hex101\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex102 != null : "fx:id=\"hex102\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex103 != null : "fx:id=\"hex103\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex104 != null : "fx:id=\"hex104\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex105 != null : "fx:id=\"hex105\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex106 != null : "fx:id=\"hex106\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex107 != null : "fx:id=\"hex107\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex108 != null : "fx:id=\"hex108\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex109 != null : "fx:id=\"hex109\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex11 != null : "fx:id=\"hex11\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex110 != null : "fx:id=\"hex110\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex111 != null : "fx:id=\"hex111\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex112 != null : "fx:id=\"hex112\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex113 != null : "fx:id=\"hex113\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex114 != null : "fx:id=\"hex114\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex115 != null : "fx:id=\"hex115\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex116 != null : "fx:id=\"hex116\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex117 != null : "fx:id=\"hex117\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex118 != null : "fx:id=\"hex118\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex119 != null : "fx:id=\"hex119\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex12 != null : "fx:id=\"hex12\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex120 != null : "fx:id=\"hex120\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex121 != null : "fx:id=\"hex121\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex122 != null : "fx:id=\"hex122\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex123 != null : "fx:id=\"hex123\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex124 != null : "fx:id=\"hex124\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex125 != null : "fx:id=\"hex125\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex126 != null : "fx:id=\"hex126\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex127 != null : "fx:id=\"hex127\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex13 != null : "fx:id=\"hex13\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex14 != null : "fx:id=\"hex14\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex15 != null : "fx:id=\"hex15\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex16 != null : "fx:id=\"hex16\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex17 != null : "fx:id=\"hex17\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex18 != null : "fx:id=\"hex18\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex19 != null : "fx:id=\"hex19\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex2 != null : "fx:id=\"hex2\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex20 != null : "fx:id=\"hex20\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex21 != null : "fx:id=\"hex21\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex22 != null : "fx:id=\"hex22\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex23 != null : "fx:id=\"hex23\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex24 != null : "fx:id=\"hex24\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex25 != null : "fx:id=\"hex25\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex26 != null : "fx:id=\"hex26\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex27 != null : "fx:id=\"hex27\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex28 != null : "fx:id=\"hex28\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex29 != null : "fx:id=\"hex29\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex3 != null : "fx:id=\"hex3\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex30 != null : "fx:id=\"hex30\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex31 != null : "fx:id=\"hex31\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex32 != null : "fx:id=\"hex32\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex33 != null : "fx:id=\"hex33\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex34 != null : "fx:id=\"hex34\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex35 != null : "fx:id=\"hex35\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex36 != null : "fx:id=\"hex36\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex37 != null : "fx:id=\"hex37\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex38 != null : "fx:id=\"hex38\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex39 != null : "fx:id=\"hex39\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex4 != null : "fx:id=\"hex4\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex40 != null : "fx:id=\"hex40\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex41 != null : "fx:id=\"hex41\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex42 != null : "fx:id=\"hex42\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex43 != null : "fx:id=\"hex43\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex44 != null : "fx:id=\"hex44\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex45 != null : "fx:id=\"hex45\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex46 != null : "fx:id=\"hex46\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex47 != null : "fx:id=\"hex47\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex48 != null : "fx:id=\"hex48\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex49 != null : "fx:id=\"hex49\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex5 != null : "fx:id=\"hex5\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex50 != null : "fx:id=\"hex50\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex51 != null : "fx:id=\"hex51\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex52 != null : "fx:id=\"hex52\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex53 != null : "fx:id=\"hex53\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex54 != null : "fx:id=\"hex54\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex55 != null : "fx:id=\"hex55\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex56 != null : "fx:id=\"hex56\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex57 != null : "fx:id=\"hex57\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex58 != null : "fx:id=\"hex58\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex59 != null : "fx:id=\"hex59\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex6 != null : "fx:id=\"hex6\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex60 != null : "fx:id=\"hex60\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex61 != null : "fx:id=\"hex61\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex62 != null : "fx:id=\"hex62\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex63 != null : "fx:id=\"hex63\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex64 != null : "fx:id=\"hex64\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex65 != null : "fx:id=\"hex65\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex66 != null : "fx:id=\"hex66\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex67 != null : "fx:id=\"hex67\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex68 != null : "fx:id=\"hex68\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex69 != null : "fx:id=\"hex69\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex7 != null : "fx:id=\"hex7\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex70 != null : "fx:id=\"hex70\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex71 != null : "fx:id=\"hex71\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex72 != null : "fx:id=\"hex72\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex73 != null : "fx:id=\"hex73\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex74 != null : "fx:id=\"hex74\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex75 != null : "fx:id=\"hex75\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex76 != null : "fx:id=\"hex76\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex77 != null : "fx:id=\"hex77\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex78 != null : "fx:id=\"hex78\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex79 != null : "fx:id=\"hex79\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex8 != null : "fx:id=\"hex8\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex80 != null : "fx:id=\"hex80\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex81 != null : "fx:id=\"hex81\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex82 != null : "fx:id=\"hex82\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex83 != null : "fx:id=\"hex83\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex84 != null : "fx:id=\"hex84\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex85 != null : "fx:id=\"hex85\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex86 != null : "fx:id=\"hex86\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex87 != null : "fx:id=\"hex87\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex88 != null : "fx:id=\"hex88\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex89 != null : "fx:id=\"hex89\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex9 != null : "fx:id=\"hex9\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex90 != null : "fx:id=\"hex90\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex91 != null : "fx:id=\"hex91\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex92 != null : "fx:id=\"hex92\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex93 != null : "fx:id=\"hex93\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex94 != null : "fx:id=\"hex94\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex95 != null : "fx:id=\"hex95\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex96 != null : "fx:id=\"hex96\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex97 != null : "fx:id=\"hex97\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex98 != null : "fx:id=\"hex98\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert hex99 != null : "fx:id=\"hex99\" was not injected: check your FXML file 'hello-view.fxml'.";
-
     }
-
 }
