@@ -18,7 +18,7 @@ public class ControllerTest {
         Hexagon dummyHex = new Hexagon(0, 0, 0, dummyPolygon);
 
         // No neighbors, no owner
-        boolean isValid = controller.isValidMove(dummyPolygon, dummyHex, Color.BLUE);
+        boolean isValid = controller.isValidMove(dummyHex, Color.BLUE);
 
         assertTrue(isValid, "Should allow first placement if hex is empty and has no neighbors.");
     }

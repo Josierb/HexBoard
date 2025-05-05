@@ -18,7 +18,6 @@ import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.animation.FadeTransition;
-import javafx.animation.PauseTransition;
 import javafx.util.Duration;
 
 /**
@@ -75,7 +74,7 @@ public class Controller {
         if (hoveredHex == null) return;
 
         Color currentColor = isBlueTurn ? COLOR_BLUE : COLOR_ORANGE;
-        if (isValidMove(hexagon, hoveredHex, currentColor)) {
+        if (isValidMove(hoveredHex, currentColor)) {
             if (hexagon.getFill().equals(HEX_NAVY)) {
                 hexagon.setFill(Color.DARKMAGENTA);
             }
@@ -152,7 +151,7 @@ public class Controller {
     /**
      * Validates if a move is allowed (no adjacent same color OR a capture move).
      */
-    private boolean isValidMove(Polygon hexagon, Hexagon hoveredHex, Color currentColor) {
+    protected boolean isValidMove(Hexagon hoveredHex, Color currentColor) {
         boolean isCapturing = isCaptureMove(hoveredHex, currentColor);
         List<Hexagon> neighbors = getHexNeighbors(hoveredHex);
         boolean adjacentToSameColor = false;
